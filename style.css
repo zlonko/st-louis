@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css?family=Merriweather&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Kosugi&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Domine:400,700&display=swap');
+
+
+body {
+    background-color: #eae7dc;
+    overflow-x: hidden;
+}
+
+#sections {
+    position: relative;
+    display: inline-block;
+    width: 420px;
+    top: 60px;
+    z-index: 90;
+    margin-right: 50px;
+    color: #6e6c68;
+}
+
+.categoryLegend {
+    font-family: "Domine";
+    color:#8e8d8a;
+}
+
+.categoryLegend2 {
+    font-family: "Domine";
+    color: #8e8d8a;
+}
+
+.categoryLegend3 {
+    font-family: "Domine";
+    color: #8e8d8a;
+}
+
+.highlighter {
+    background-color: #FFFF00
+}
+
+.step {
+    margin-bottom: 100px;
+    height: 700px;
+    font-family: "Domine";
+    font-weight: 400;
+    line-height: 1.4em;
+    text-align: justify;
+    /* display: flex;
+    flex-direction: column;
+    justify-content: space-around; */
+}
+
+h1, h2 {
+    font-weight: 700;
+    text-align: left;
+    line-height: 48px;
+    color:#4f4e4c;
+}
+
+h1 {
+    font-size: 35px;
+    color:#4f4e4c;
+}
+
+strong {
+    /* color: rgb(245, 155, 155); */
+    color: rgb(70, 159, 255);
+}
+
+#graphic {
+    margin: auto;
+    width: 1500px;
+    flex-direction: row;
+    align-items: top;
+    justify-content: space-around;
+}
+
+#vis {
+    display: inline-block;
+    position: fixed;
+    top: 0px;
+    z-index: 1;
+    margin-left: 0;
+    height: 1000px;
+    width: 1000px;
+}
+
+#map {
+    display: inline-block;
+    position: fixed;
+    top: 0px;
+    z-index: 1;
+    margin-left: 0;
+    height: 1000px;
+    width: 1000px;
+}
+
+.tick line {
+    stroke: 'red'
+}
+
+#tooltip {
+    position: absolute;
+    display: none;
+    background: rgba(0, 0, 0, .7);
+    border-radius: 3px;
+    box-shadow: -3px 3px 15px #939393;
+    color: white;
+    padding: 6px;
+    font-family: "Merriweather";
+    font-size: 1.1em;
+    max-width: 400px;
+    z-index: 100;
+}
+
+svg circle:hover{
+    cursor: pointer;
+}
+
+.swatch {
+    /* fill: #939393; */
+    fill: #d8c3a5;
+}
+
+.sizeLegend2 {
+    opacity: 0.7
+}
+
+a {
+    color: #e98074;
+    text-decoration: none;
+}
+
+img {
+    display: none;
+}

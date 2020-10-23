@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src = 'd3.js'></script>
+    <script src = 'https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js'></script>
+    <script>history.scrollRestoration = "manual"</script>
+    <meta property='og:title' content='The St. Louis Divide'/>
+    <!-- <meta property='og:image' content='https://github.com/cuthchow/college-majors-visualisation/blob/master/preview.png'/> -->
+    <!-- <meta property='og:description' content='This interactive, scrollable data visualisation will take you on a journey through all of the different college majors in the United States, and compare how they stack up in terms of median graduate salary, gender ratios, employability, and other factors. '/> -->
+    <!-- <meta property='og:url' content='https://cuthchow.github.io/college-majors-visualisation/'/> -->
+
+
+    <title>The St. Louis Divide</title>
+</head>
+
+
+<body>
+    <div id="tooltip"></div>
+    
+    <div id="graphic">
+        
+        <div id="sections">
+            <section class="step">
+                <div class="title"></div>
+                <br><br>
+                <h1>The St. Louis Divide</h1>
+                <p>by <a href='https://www.linkedin.com/in/timblaine/'>Tim Blaine</a>
+                <br><br>
+                In 1877, St. Louis, Missouri separated into two distinct governments: the City and the County. 
+                Flash forward to 2020: the County has grown in size, while the City has shrunk to a third of its 
+                peak population. 
+                <br><br>
+                How has this division affected the region? This chart shows how U.S. Census tracts are drawn 
+                in the City and County, with the color of each tract representing median income of its residents. 
+                This gives us a rough idea of how wealth is distributed in the region, but obscures important information 
+                about race. We can use visualizations to get a better understanding.
+                <br><br>
+                Scroll down for a closer look! At any point, you can hover over a bubble to see data for that tract.
+                <br><br>
+                Source: <a href='https://www.census.gov/programs-surveys/acs'>American Community Survey 2018</a>
+                </p>
+            </section>
+
+            <section class="step">
+                <h2>How many people live in St. Louis?</h2>
+                <p>
+                Let's start by comparing how many people live in the City and the County. The size of each 
+                bubble represents the total population of that tract.
+                <br><br>
+                As you can see, the County has more than three times the number of residents than the City. In fact,
+                the County is more populous today than the City was at its peak! In 1950, it had 856,796 residents.
+                <br>
+                </p>
+                <svg id = 'legend' width = '400px' height = '500px'></svg>
+            </section>
+
+            <section class="step">
+                <br><br><br><br><br><br>
+                <h2>How much do residents make?</h2>
+                <p>
+                With this in mind, let's order our color-coded census tracts by median income. The result shows us 
+                the distribution of median income for the entire region. Notice how color changes from left to right, 
+                with blue tracts further to the left than pink tracts. 
+                <br><br>
+                <span class="highlighter">Median income tends to be higher in the County</span> than in the City. 
+                So, who are the residents of the City?
+                </p>
+                <!-- <svg id = 'legend' width = '400px' height = '500px'></svg> -->
+            </section>
+
+            <section class="step">
+                <h2>Who lives in St. Louis?</h2>
+                <p></p>
+                To answer this question, let's return to our first chart and make a small adjustment. The size of each bubble still 
+                represents the number of residents in a tract, but 
+                <span class="highlighter">color now represents the racial diversity</span> of those residents. 
+                Approximately 30% of all Americans are people of color, so purple bubbles signify tracts that meet or exceed 
+                the national average.
+                <br><br>
+                When we count all of the people of color in the St. Louis region, we learn that they make up a higher proportion of 
+                City residents (53%) than County residents (31%). While the City has fewer residents than the County, City residents are more racially 
+                diverse than those in the County.
+                <br>
+                </p>
+                <svg id = 'categorylegend2' width = '400px' height = '500px'></svg>
+            </section>
+
+            <section class="step">
+                <h2>What about Black St. Louisians?</h2>
+                <p></p>
+                The difference is even more stark when we compare Black communities living the City and the County. 
+                <span class="highlighter">Black residents are almost half of the City population</span>, 
+                while they make up roughly a quarter of the County population.
+                <br><br>
+                Again, we set the threshold at the national average. Therefore, purple bubbles indicate tracts where at least 13% of residents 
+                identify as Black.
+                <br>
+                </p>
+                <svg id = 'categorylegend3' width = '400px' height = '500px'></svg>
+            </section>
+            
+            <section class="step">
+                <p>
+                <h2>Do race and income interact?</h2>
+                So far, previous charts have shown us that median income is higher in the County and that the City is more racially diverse,
+                especially when it comes to the proportion of Black residents. Using the same national threshold for purple (13%), let's 
+                examine the relationship between the proportion of Black residents (X) and median income (Y).
+                <br><br>
+                This plot tells us that the 
+                <span class="highlighter">median income decreases as the proportion of Black residents increases</span>. We may also 
+                observe the many tracts concentrated on either end of this distribution, further pronouncing this wealth divide.
+                <br><br>
+                No Census tract in 
+                <br>
+                </p>
+                <svg id = 'categorylegend3' width = '400px' height = '500px'></svg>
+            </section>
+
+            <section class="step">
+                <p>
+                <h2>What about poverty?</h2>
+                To further confirm the correlation we just observed, we can visualize the relationship between the proportion of residents at or
+                below the national poverty threshold and the proportion of Black residents in a census tract. 
+                <br><br>
+                Another trend emerges. Areas of St. Louis with a greater proportion of Black residents also tend to have a higher proportion of 
+                residents living in poverty.
+                <br><br>
+                </p>
+            </section>
+
+            <section class="step">
+                <h2>Where do we go from here?</h2>
+                <p>
+                We've only scratched the surface of this complex issue, but hopefully this overview has piqued your interest.
+                As you read this, initiatives are underway to repair racial disparities in the City and County. Policy reform, business incentives,
+                and community programs are just a few of the important steps being taken towards a more equitable St. Louis.
+                <br><br>
+                </p>
+                <h2>Links</h2>
+                <p>You can view the code for this project on <a href='https://www.github.com/tblainek/st-louis'>GitHub</a>.
+                </p>            
+            </section>
+
+        </div>
+        <div id="map" class="map"></div>
+        <div id="vis"></div>
+
+    </div>
+    
+    <script src = 'scroller.js'></script>
+    <script src = 'sections_cocity.js'></script>
+    <script>
+        //Width and height
+        var w = 500;
+        var h = 300;
+
+        //Define path generator
+        var path = d3.geoPath();
+
+        //Create SVG element
+        var mapSvg = d3.select("#map").append("svg").attr({width:w, height: h});
+
+        //Load in GeoJSON data
+        d3.json("data/tracts.geojson", function(json) {
+
+            //Bind data and create one path per GeoJSON feature
+            mapSvg.selectAll("path")
+               .data(json.features)
+               .enter()
+               .append("path")
+               .attr("d", path)
+               .attr("fill","#666666");
+
+        });
+    </script>
+</body>
+</html>
