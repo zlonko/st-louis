@@ -37,6 +37,24 @@ body {
     background-color: #FFFF00
 }
 
+.line1 {
+    fill: none;
+    stroke-width: 2px;
+  }
+
+.line2 {
+    fill: none;
+    stroke-width: 2px;
+  }
+
+.linelabel1 {
+    fill: none;
+}
+
+.linelabel2 {
+    fill: none;
+}
+
 .step {
     margin-bottom: 100px;
     height: 700px;
@@ -92,6 +110,12 @@ strong {
     margin-left: 0;
     height: 1000px;
     width: 1000px;
+}
+
+.region {
+    fill: #f0e4dd;
+    stroke: #e0cabc;
+    stroke-width: 0.5;
 }
 
 .tick line {
