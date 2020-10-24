@@ -1,6 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Merriweather&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Kosugi&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Domine:400,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif&family=Open+Sans&display=swap');
 
 
 body {
@@ -19,17 +17,27 @@ body {
 }
 
 .categoryLegend {
-    font-family: "Domine";
+    font-family: "Noto Serif", serif;
+    color:#8e8d8a;
+}
+
+.categoryLegenda {
+    font-family: "Noto Serif", serif;
     color:#8e8d8a;
 }
 
 .categoryLegend2 {
-    font-family: "Domine";
+    font-family: "Noto Serif", serif;
     color: #8e8d8a;
 }
 
 .categoryLegend3 {
-    font-family: "Domine";
+    font-family: "Noto Serif", serif;
+    color: #8e8d8a;
+}
+
+.categoryLegend4 {
+    font-family: "Noto Serif", serif;
     color: #8e8d8a;
 }
 
@@ -58,13 +66,10 @@ body {
 .step {
     margin-bottom: 100px;
     height: 700px;
-    font-family: "Domine";
+    font-family: "Noto Serif", serif;
     font-weight: 400;
     line-height: 1.4em;
     text-align: justify;
-    /* display: flex;
-    flex-direction: column;
-    justify-content: space-around; */
 }
 
 h1, h2 {
@@ -79,8 +84,14 @@ h1 {
     color:#4f4e4c;
 }
 
+h3 {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color:#807e7c;
+}
+
 strong {
-    /* color: rgb(245, 155, 155); */
     color: rgb(70, 159, 255);
 }
 
@@ -130,7 +141,7 @@ strong {
     box-shadow: -3px 3px 15px #939393;
     color: white;
     padding: 6px;
-    font-family: "Merriweather";
+    font-family: "Open Sans", sans-serif;
     font-size: 1.1em;
     max-width: 400px;
     z-index: 100;
@@ -143,10 +154,6 @@ svg circle:hover{
 .swatch {
     /* fill: #939393; */
     fill: #d8c3a5;
-}
-
-.sizeLegend2 {
-    opacity: 0.7
 }
 
 a {
