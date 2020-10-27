@@ -5,22 +5,22 @@ let categoryLegend, categoryLegend2, incomeLegend
 let stlouis
 
 const categories = ['St. Louis City','St. Louis County']
-const categories2 = ['< 30% People of Color','> 30% People of Color']
-const categories3 = ['< 13% Black','> 13% Black']
+const categories2 = ['< 30% People of Color','> 30% People of Color', '> 50% People of Color']
+const categories3 = ['< 13% Black','> 13% Black','> 50% Black']
 
 const categoriesXY = {'St. Louis City': [50, 500, 31913, 311273, 53.0, 46.3, 144255, 63.2, 0],
                     'St. Louis County': [500, 500, 30100, 998684, 31.2, 23.7, 237047, 79.4, 15]
                     }
 
-const margin = {left: 170, top: 50, bottom: 50, right: 20}
+const margin = {left: 200, top: 80, bottom: 50, right: 20}
 const width = 1000 - margin.left - margin.right
 const height = 950 - margin.top - margin.bottom
 
 
-// Read data
+// Read the data
 
 Promise.all([
-    d3.csv('data/dataset.csv', function(d){
+    d3.csv('https://raw.githubusercontent.com/tblainek/st-louis/master/data/dataset.csv', function(d){
         return {
             Tract: d.TRACT,
             County: d.COUNTY_NAME,
@@ -37,7 +37,7 @@ Promise.all([
             MapCoordinates: d.coords
         };
     }),
-    d3.csv('data/populationchange.csv', function(d){
+    d3.csv('https://raw.githubusercontent.com/tblainek/st-louis/master/data/populationchange.csv', function(d){
         return {
             Year: +d.YEAR,
             PopCity: +d.ST_LOUIS_CITY,
@@ -55,8 +55,9 @@ Promise.all([
 
 
 const colors = ['#6d49d6', '#e85a4f']
-const colors2 = ['#d6d6d2', '#802d72']
-const colors3 = ['#d6d6d2', '#802d72']
+const colors2 = ['#d6d6d2', '#b06fa5', '#802d72']
+const colors3 = ['#d6d6d2', '#b06fa5', '#802d72']
+
 
 //Create all the scales and save to global variables
 
@@ -95,19 +96,35 @@ function createScales(){
 // Create legend keys appearing in article text
 
 function createLegend(x, y){
-    let svg = d3.select('#legend')
+    let svg = d3.select('#categorylegend')
 
     svg.append('g')
         .attr('class', 'categoryLegend')
         .attr('transform', `translate(${x},${y})`)
 
     categoryLegend = d3.legendColor()
-                            .shape('path', d3.symbol().type(d3.symbolCircle).size(200)())
-                            .shapePadding(10)
-                            .scale(categoryColorScale)
+                        .shape('path', d3.symbol().type(d3.symbolCircle).size(200)())
+                        .shapePadding(10)
+                        .scale(categoryColorScale)
     
     d3.select('.categoryLegend')
         .call(categoryLegend)
+}
+
+function createLegenda(x, y){
+    let svg = d3.select('#categorylegenda')
+
+    svg.append('g')
+        .attr('class', 'categoryLegenda')
+        .attr('transform', `translate(${x},${y})`)
+
+    categoryLegenda = d3.legendColor()
+                        .shape('path', d3.symbol().type(d3.symbolCircle).size(200)())
+                        .shapePadding(10)
+                        .scale(categoryColorScale)
+    
+    d3.select('.categoryLegenda')
+        .call(categoryLegenda)
 }
 
 function createLegend2(x, y){
@@ -118,9 +135,9 @@ function createLegend2(x, y){
         .attr('transform', `translate(${x},${y})`)
 
     categoryLegend2 = d3.legendColor()
-                            .shape('path', d3.symbol().type(d3.symbolCircle).size(200)())
-                            .shapePadding(10)
-                            .scale(categoryColorScale2)
+                        .shape('path', d3.symbol().type(d3.symbolCircle).size(200)())
+                        .shapePadding(10)
+                        .scale(categoryColorScale2)
     
     d3.select('.categoryLegend2')
         .call(categoryLegend2)
@@ -134,22 +151,57 @@ function createLegend3(x, y){
         .attr('transform', `translate(${x},${y})`)
 
     categoryLegend3 = d3.legendColor()
-                            .shape('path', d3.symbol().type(d3.symbolCircle).size(200)())
-                            .shapePadding(10)
-                            .scale(categoryColorScale3)
+                        .shape('path', d3.symbol().type(d3.symbolCircle).size(200)())
+                        .shapePadding(10)
+                        .scale(categoryColorScale3)
     
     d3.select('.categoryLegend3')
         .call(categoryLegend3)
 }
 
+function createLegend4(x, y){
+    let svg = d3.select('#categorylegend4')
+
+    svg.append('g')
+        .attr('class', 'categoryLegend4')
+        .attr('transform', `translate(${x},${y})`)
+
+    categoryLegend4 = d3.legendColor()
+                        .shape('path', d3.symbol().type(d3.symbolCircle).size(200)())
+                        .shapePadding(10)
+                        .scale(categoryColorScale3)
+    
+    d3.select('.categoryLegend4')
+        .call(categoryLegend4)
+}
+
+function createLegend5(x, y){
+    let svg = d3.select('#categorylegend5')
+
+    svg.append('g')
+        .attr('class', 'categoryLegend5')
+        .attr('transform', `translate(${x},${y})`)
+
+    categoryLegend5 = d3.legendColor()
+                        .shape('path', d3.symbol().type(d3.symbolCircle).size(200)())
+                        .shapePadding(10)
+                        .scale(categoryColorScale3)
+    
+    d3.select('.categoryLegend5')
+        .call(categoryLegend5)
+}
+
+
 
 // Set up conditional colors
 
-// Function to color bubbles by % Black residents
+// Function to color bubbles by % people of color
 
 function colorByPctNWFill(d, i){
-    if (d.PctNotWhite > 0.33){
+    if (d.PctNotWhite > 0.50){
         return '#802d72'
+    } else if (d.PctNotWhite > 0.33) {
+        return '#b06fa5'
     } else {
         return '#ccccc8'
     }
@@ -158,8 +210,10 @@ function colorByPctNWFill(d, i){
 // Function to color bubbles by % Black residents
 
 function colorByPctBlackFill(d, i){
-    if (d.PctBlack > 0.13){
+    if (d.PctBlack > 0.50){
         return '#802d72'
+    } else if (d.PctBlack > 0.13) {
+        return '#b06fa5'
     } else {
         return '#ccccc8'
     }
@@ -168,15 +222,16 @@ function colorByPctBlackFill(d, i){
 
 function drawInitial(){
 
-    let svg = d3.select("#vis")
+    let svg = d3.select("#viz")
                     .append('svg')
-                    .attr('width', 1000)
-                    .attr('height', 950)
+                    .attr("viewBox", `0 0 1200 1000`)
+                    // .attr('width', 1000)
+                    // .attr('height', 950)
                     .attr('opacity', 1)
 
     simulation = d3.forceSimulation(dataset)
 
-     // Define each tick of simulation
+    // Define each tick of simulation
 
     simulation.on('tick', () => {
         nodes
@@ -261,7 +316,7 @@ function drawInitial(){
         .text(d => `Average: $${d3.format(",.2r")(categoriesXY[d][2])}`)
         .attr('x', d => categoriesXY[d][0] + 200 + 1000)
         .attr('y', d => categoriesXY[d][1] - 500)
-        .attr('font-family', 'Domine')
+        .attr('font-family', 'Noto Serif')
         .attr('font-size', '18px')
         .attr('font-weight', 700)
         .attr('fill', 'black')
@@ -297,8 +352,8 @@ function drawInitial(){
             .attr('opacity', 0)
             .attr('stroke-width', 3)
 
-    let scatterxAxis = d3.axisBottom(pctBlackXScale)
-    let scatteryAxis = d3.axisLeft(incomeYScale).tickSize([width])
+    let scatterxAxis = d3.axisBottom(pctBlackXScale).tickFormat(d3.format('.0%'))
+    let scatteryAxis = d3.axisLeft(incomeYScale).tickSize([width]).tickFormat(d3.format('$,'))
 
     svg.append('g')
         .call(scatterxAxis)
@@ -320,14 +375,14 @@ function drawInitial(){
             .attr('stroke-opacity', 0.2)
             .attr('stroke-dasharray', 2.5)
 
-    // Axis for Histogram 
-    let histXAxis = d3.axisBottom(popScale)
 
+    let histXAxis = d3.axisBottom(histXScale).tickFormat(d3.format('$,'))
     svg.append('g')
-        .attr('class', 'population-axis')
-        .attr('transform', 'translate(0, 700)')
+        .attr('class', 'hist-axis')
+        .attr('transform', `translate(0, ${height + margin.top + 10})`)
         .attr('opacity', 0)
         .call(histXAxis)
+
 
     // Axes for Clump
     let povertyXAxis = d3.axisBottom(pctPovertyScale)
@@ -338,17 +393,17 @@ function drawInitial(){
         .attr('opacity', 0)
         .call(povertyXAxis)
     
-   let povertyYAxis = d3.axisLeft(pctPovertyScale).tickSize([width])
+   let povertyYAxis = d3.axisLeft(pctPovertyScale).tickSize([width]).tickFormat(d3.format('.0%'))
 
     svg.append('g')
         .call(povertyYAxis)
         .attr('class', 'poverty-y-axis')
         .attr('opacity', 0)
-        .attr('transform', `translate(${margin.left - 20 + width}, -50)`)
+        .attr('transform', `translate(${margin.left - 20 + width}, -100)`)
         .call(g => g.select('.domain')
             .remove())
         .call(g => g.selectAll('.tick line'))
-            .attr('stroke-opacity', 0.2)
+            .attr('stroke-opacity', 0.3)
             .attr('stroke-dasharray', 2.5)
 
 
@@ -399,9 +454,9 @@ function drawInitial(){
         .style('stroke', '#e85a4f')
         .attr('d', lineCounty)
         .attr('stroke-opacity',1)
-    
+
     svg.append('text')
-        .attr('font-family', 'Domine')
+        .attr('font-family', 'Noto Serif')
         .attr('font-size', '18px')
         .attr('font-weight', 700)
         .attr('x',840)
@@ -411,7 +466,7 @@ function drawInitial(){
         .attr('class','linelabel1')
   
     svg.append('text')
-        .attr('font-family', 'Domine')
+        .attr('font-family', 'Noto Serif')
         .attr('font-size', '18px')
         .attr('font-weight', 700)
         .attr('x',740)
@@ -423,13 +478,14 @@ function drawInitial(){
 }
 
 
-//Cleaning Function
+// Set opacity to 0 for each section's elements when scrolling out
+// Later, when a new section is reached, opacity of that section's elements is set to 1
 
 function clean(chartType){
-    let svg = d3.select('#vis').select('svg')
+    let svg = d3.select('#viz').select('svg')
     if (chartType !== "isFirst"){
-        svg.select('.linelabel1').transition().attr('opacity', 0).attr('x', -200)
-        svg.select('.linelabel2').transition().attr('opacity', 0).attr('x', -200)
+        svg.select('.linelabel1').transition().attr('opacity', 0)
+        svg.select('.linelabel2').transition().attr('opacity', 0)
         svg.select('.line1').transition().attr('opacity', 0)
         svg.select('.line2').transition().attr('opacity', 0)
         svg.select('.population-x').transition().attr('opacity', 0)
@@ -457,16 +513,17 @@ function clean(chartType){
 }
 
 
-// Initial Draw
+// Draw the initial line chart and start up circles
 
-function drawStart(){
+function drawPopulationTrend(){
 
     simulation.stop()
     
-    let svg = d3.select("#vis")
+    let svg = d3.select("#viz")
                     .select('svg')
-                    .attr('width', 1000)
-                    .attr('height', 950)
+                    .attr("viewBox", `0 0 1200 1000`)
+                    // .attr('width', 1000)
+                    // .attr('height', 950)
     
     clean('isFirst')
     
@@ -474,8 +531,8 @@ function drawStart(){
         .transition().duration(500).delay(100)
         .attr('fill', '#eae7dc')
         .attr('r', 1)
-        .attr('cx', (d, i) => incomeXScale(d.Income)+5)
-        .attr('cy', (d, i) => i * 5.2 + 30)
+        .attr('cx', 1)
+        .attr('cy', 1)
 
     svg.select('.population-x')
         .transition()
@@ -508,7 +565,7 @@ function drawStart(){
 
 function drawTotalPopulation(){
     
-    let svg = d3.select("#vis").select('svg')
+    let svg = d3.select("#viz").select('svg').attr("viewBox", `0 0 1200 1000`)
     
     clean('isMultiples')
 
@@ -556,7 +613,7 @@ function drawTotalPopulation(){
 // Income vs. County Histogram
 
 function drawHistogram(){
-    let svg = d3.select('#vis').select('svg')
+    let svg = d3.select('#viz').select('svg').attr("viewBox", `0 0 1200 1000`)
 
     clean('isHist')
 
@@ -569,23 +626,23 @@ function drawHistogram(){
             .attr('cy', d => histYScale(d.HistCol))
             .attr('fill', d => categoryColorScale(d.County))
 
-    let xAxis = d3.axisBottom(histXScale)
-    svg.append('g')
-        .attr('class', 'hist-axis')
-        .attr('transform', `translate(0, ${height + margin.top + 10})`)
-        .call(xAxis)
+    svg.selectAll('.hist-axis')
+        .transition()
+        .attr('opacity', 0.7)
+        .selectAll('.domain')
+        .attr('opacity', 1)
 
     svg.selectAll('.lab-text')
         .on('mouseout', )
 
-    createLegend(20, 50)
+    createLegenda(20,50)
 }
 
 
 // Compare Non-White Populations in City and County
 
 function drawNWPopulation(){
-    let svg = d3.select("#vis").select('svg')
+    let svg = d3.select("#viz").select('svg').attr("viewBox", `0 0 1200 1000`)
 
     clean('isMultiples')
 
@@ -624,14 +681,14 @@ function drawNWPopulation(){
     .attr('r', d => popSizeScale(d.Population))
     .attr('fill', colorByPctNWFill)
 
-    createLegend2(20, 50)
+    createLegend2(20,50)
 }
 
 
 // Compare Black Populations in City and County
 
 function drawBlackPopulation(){
-    let svg = d3.select("#vis").select('svg')
+    let svg = d3.select("#viz").select('svg').attr("viewBox", `0 0 1200 1000`)
 
     clean('isMultiples')
     simulation.stop()
@@ -654,9 +711,9 @@ function drawBlackPopulation(){
         })
 
     svg.selectAll('.cat-rect').transition().duration(300).delay((d, i) => i * 30)
-    .attr('opacity', 0.2)
-    .attr('x', d => categoriesXY[d][0] + 90)
-    .attr('y', d => categoriesXY[d][1] + 230)
+        .attr('opacity', 0.2)
+        .attr('x', d => categoriesXY[d][0] + 90)
+        .attr('y', d => categoriesXY[d][1] + 230)
 
     simulation  
         .force('charge', d3.forceManyBody().strength([3]))
@@ -670,7 +727,7 @@ function drawBlackPopulation(){
         .attr('r', d => popSizeScale(d.Population))
         .attr('fill', colorByPctBlackFill)
 
-    createLegend3(20, 50)
+    createLegend3(20,50)
 }
 
 
@@ -679,11 +736,20 @@ function drawBlackPopulation(){
 function drawScatter(){
     simulation.stop()
     
-    let svg = d3.select("#vis").select("svg")
+    let svg = d3.select("#viz").select("svg").attr("viewBox", `0 0 1200 1000`)
     clean('isScatter')
 
-    svg.selectAll('.scatter-x').transition().attr('opacity', 0.7).selectAll('.domain').attr('opacity', 1)
-    svg.selectAll('.scatter-y').transition().attr('opacity', 0.7).selectAll('.domain').attr('opacity', 1)
+    svg.selectAll('.scatter-x')
+        .transition()
+        .attr('opacity', 0.7)
+        .selectAll('.domain')
+        .attr('opacity', 1)
+
+    svg.selectAll('.scatter-y')
+        .transition()
+        .attr('opacity', 0.7)
+        .selectAll('.domain')
+        .attr('opacity', 1)
 
     svg.selectAll('circle')
         .transition().duration(800).ease(d3.easeBack)
@@ -692,12 +758,12 @@ function drawScatter(){
     
     svg.selectAll('circle').transition(1600)
         .attr('fill', colorByPctBlackFill)
-        // .attr('fill', d => categoryColorScale(d.County))
         .attr('r', 4)
 
     svg.select('.best-fit').transition().duration(300)
         .attr('opacity', 0.5)
    
+    createLegend4(20,50)
 }
 
 
@@ -705,7 +771,7 @@ function drawScatter(){
 
 function drawPoverty(){
 
-    let svg = d3.select('#vis').select('svg')
+    let svg = d3.select('#viz').select('svg').attr("viewBox", `0 0 1200 1000`)
 
     clean('isBubble')
 
@@ -724,29 +790,23 @@ function drawPoverty(){
     // Show % poverty axis (remember to include domain)
     svg.select('.poverty-y-axis').attr('opacity', 0.5).selectAll('.domain').attr('opacity', 1)
 
+    createLegend5(20,50)
 }
 
-// Clump chart depicting % poverty level
+// Clump chart depicting % poverty level, but colored by City or County
 
 function drawPoverty2(){
 
-    let svg = d3.select('#vis').select('svg')
+    let svg = d3.select('#viz').select('svg').attr("viewBox", `0 0 1200 1000`)
 
     clean('isBubble')
-
-    // simulation
-    //     .force('forceX', d3.forceY(d => pctPovertyScale(d.PctPoverty)-50))
-    //     .force('forceY', d3.forceX(550))
-    //     .force('collide', d3.forceCollide(d => popSizeScale(d.Population)+1))
-    //     .alpha(0.8).alphaDecay(0.05).restart()
 
     svg.selectAll('circle')
         .transition().duration(300).delay((d, i) => i * 4)
         .attr('r', d => popScale(d.Population)*0.02)
         .attr('fill', d => categoryColorScale(d.County))
 
-
-    // Show % poverty axis (remember to include domain)
+    // Show % poverty axis
     svg.select('.poverty-y-axis').attr('opacity', 0.5).selectAll('.domain').attr('opacity', 1)
 
 }
@@ -754,41 +814,40 @@ function drawPoverty2(){
 
 // All tracts together
 
-function drawConclusion(){
-    clean('none')
+// function drawConclusion(){
+//     clean('none')
 
-    let svg = d3.select('#vis').select('svg')
-    svg.selectAll('circle')
-        .transition()
-        .attr('r', d => popSizeScale(d.Population)*1.5)
-        .attr('fill', d => categoryColorScale(d.County))
+//     let svg = d3.select('#viz').select('svg')
+//     svg.selectAll('circle')
+//         .transition()
+//         .attr('r', d => popSizeScale(d.Population)*1.5)
+//         .attr('fill', d => categoryColorScale(d.County))
 
-    simulation 
-        .force('forceX', d3.forceX(550))
-        .force('forceY', d3.forceY(550))
-        .force('collide', d3.forceCollide(d => popSizeScale(d.Population) * 1.8))
-        .force('charge', d3.forceManyBody().strength([3]))
-        .alpha(0.6).alphaDecay(0.05).restart()
+//     simulation 
+//         .force('forceX', d3.forceX(550))
+//         .force('forceY', d3.forceY(550))
+//         .force('collide', d3.forceCollide(d => popSizeScale(d.Population) * 1.8))
+//         .force('charge', d3.forceManyBody().strength([3]))
+//         .alpha(0.6).alphaDecay(0.05).restart()
         
-}
+// }
 
 
 // All charts to be called on scroll
 
 let activationFunctions = [
-    drawStart,
+    drawPopulationTrend,
     drawTotalPopulation,
     drawHistogram,
     drawNWPopulation,
     drawBlackPopulation,
     drawScatter,
     drawPoverty,
-    drawPoverty2,
-    drawConclusion
+    drawPoverty2
 ]
 
 
-// Scrolling funciton creates new chart using index
+// Scrolling function creates new chart using index
 
 let scroll = scroller()
     .container(d3.select('#graphic'))
