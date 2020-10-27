@@ -8,17 +8,19 @@
     <script src = 'https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js'></script>
     <script>history.scrollRestoration = "manual"</script>
     <meta property='og:title' content='The St. Louis Divide'/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>The St. Louis Divide</title>
 </head>
 
 
 <body>
 
-    <div id="tooltip"></div>
-    
-    <div id="graphic">
+    <div id="parent">
         
+        <div id="tooltip"></div>
+    
         <div id="sections">
+
             <section class="step">
                 <h1>The St. Louis Divide</h1>
                 <h3>By <a href='https://www.linkedin.com/in/timblaine/' target='blank'><b>TIM BLAINE-KUKLO</b></a>
@@ -37,8 +39,8 @@
                 Visualizations can help us better understand St. Louis. Scroll down for a closer look! 
                 <br><br>
                 Source: <a href='https://www.census.gov/programs-surveys/acs' target='blank'>American Community Survey 2018</a>
-                
                 </p>
+                <div style="height:100px;width:20px;"></div>        
             </section>
 
             <section class="step">
@@ -53,11 +55,10 @@
                 than the City. Hover over a census tract to learn more about the people who live there.
                 <br>
                 </p>
-                <svg id='categorylegend' width='400px' height='300px'></svg>
+                <svg id='categorylegend' width='400px' height='200px'></svg>
             </section>
 
             <section class="step">
-                <br><br><br><br><br><br>
                 <h2>How much do residents make?</h2>
                 <p>
                 With this in mind, let's use a histogram to arrange our census tracts by median income. 
@@ -68,13 +69,13 @@
                 of residents moving away. Also, City residents tend to make less money than County residents.
                 <br><br>
                 So, what do we know about the residents themselves?
-                <svg id='categorylegenda' width='400px' height='300px'></svg>
                 </p>
+                <svg id='categorylegenda' width='400px' height='200px'></svg>
             </section>
 
             <section class="step">
                 <h2>Who lives in St. Louis?</h2>
-                <p></p>
+                <p>
                 To answer this question, let's return to our first chart and make one adjustment. The size of each bubble still 
                 represents the number of residents in a census tract, but 
                 <span class="highlighter">color now represents the racial diversity</span> 
@@ -86,12 +87,12 @@
                 are more racially diverse than those in the County.
                 <br>
                 </p>
-                <svg id='categorylegend2' width='400px' height='500px'></svg>
+                <svg id='categorylegend2' width='400px' height='200px'></svg>
             </section>
 
             <section class="step">
                 <h2>What about Black St. Louisians?</h2>
-                <p></p>
+                <p>
                 This difference is more pronounced when we compare Black communities. In fact,
                 <span class="highlighter">Black residents make up almost half of the City population</span> (46%), 
                 while they are roughly a quarter of the County population (24%).
@@ -100,12 +101,13 @@
                 least 13% of residents identify as Black.
                 <br>
                 </p>
-                <svg id='categorylegend3' width='400px' height='500px'></svg>
+                <svg id='categorylegend3' width='400px' height='200px'></svg>
             </section>
             
             <section class="step">
                 <p>
                 <h2>Do race and income interact?</h2>
+                <p>
                 We've learned that median income is higher in the County and the City is more racially diverse, especially when it comes to the proportion 
                 of Black residents. Using the same national threshold (13%), let's examine the relationship between the proportion of 
                 Black residents <i>x</i> and median income <i>y</i>.
@@ -115,12 +117,13 @@
                 Also, notice the census tracts clustered on the ends of this distribution. This further expresses a racial division in wealth.
                 <br>
                 </p>
-                <svg id='categorylegend4' width='400px' height='500px'></svg>
+                <svg id='categorylegend4' width='400px' height='200px'></svg>
             </section>
 
             <section class="step">
                 <p>
                 <h2>What about poverty?</h2>
+                <p>
                 Finally, we can visualize the relationship between the proportion of residents at or below the national poverty threshold 
                 and the proportion of Black residents in a census tract. 
                 <br><br>
@@ -129,7 +132,7 @@
                 <span class="highlighter">higher proportion of residents living in poverty</span>.
                 <br><br>
                 </p>
-                <svg id='categorylegend5' width='400px' height='500px'></svg>
+                <svg id='categorylegend5' width='400px' height='200px'></svg>
             </section>
 
             <section class="step">
@@ -150,14 +153,18 @@
                     <li><a href='https://helpingpeople.org/our-impact/racial-equity/' target='blank'>United Way of Greater St. Louis</a></li>
                 </ul>
                     You can view the code for this project on <a href='https://www.github.com/tblainek/st-louis' target='blank'>GitHub</a>.
-                </p>            
+                </p>    
+                <div style="height:100px;width:20px;"></div>        
             </section>
 
         </div>
-        <div id="vis"></div>
+
+        <div id="viz"></div>
 
     </div>
+
     <script src='scroller.js'></script>
     <script src='visualizations.js'></script>
+
 </body>
 </html>

@@ -12,7 +12,7 @@ const categoriesXY = {'St. Louis City': [50, 500, 31913, 311273, 53.0, 46.3, 144
                     'St. Louis County': [500, 500, 30100, 998684, 31.2, 23.7, 237047, 79.4, 15]
                     }
 
-const margin = {left: 170, top: 50, bottom: 50, right: 20}
+const margin = {left: 200, top: 80, bottom: 50, right: 20}
 const width = 1000 - margin.left - margin.right
 const height = 950 - margin.top - margin.bottom
 
@@ -222,10 +222,11 @@ function colorByPctBlackFill(d, i){
 
 function drawInitial(){
 
-    let svg = d3.select("#vis")
+    let svg = d3.select("#viz")
                     .append('svg')
-                    .attr('width', 1000)
-                    .attr('height', 950)
+                    .attr("viewBox", `0 0 1200 1000`)
+                    // .attr('width', 1000)
+                    // .attr('height', 950)
                     .attr('opacity', 1)
 
     simulation = d3.forceSimulation(dataset)
@@ -481,7 +482,7 @@ function drawInitial(){
 // Later, when a new section is reached, opacity of that section's elements is set to 1
 
 function clean(chartType){
-    let svg = d3.select('#vis').select('svg')
+    let svg = d3.select('#viz').select('svg')
     if (chartType !== "isFirst"){
         svg.select('.linelabel1').transition().attr('opacity', 0)
         svg.select('.linelabel2').transition().attr('opacity', 0)
@@ -518,10 +519,11 @@ function drawPopulationTrend(){
 
     simulation.stop()
     
-    let svg = d3.select("#vis")
+    let svg = d3.select("#viz")
                     .select('svg')
-                    .attr('width', 1000)
-                    .attr('height', 950)
+                    .attr("viewBox", `0 0 1200 1000`)
+                    // .attr('width', 1000)
+                    // .attr('height', 950)
     
     clean('isFirst')
     
@@ -563,7 +565,7 @@ function drawPopulationTrend(){
 
 function drawTotalPopulation(){
     
-    let svg = d3.select("#vis").select('svg')
+    let svg = d3.select("#viz").select('svg').attr("viewBox", `0 0 1200 1000`)
     
     clean('isMultiples')
 
@@ -611,7 +613,7 @@ function drawTotalPopulation(){
 // Income vs. County Histogram
 
 function drawHistogram(){
-    let svg = d3.select('#vis').select('svg')
+    let svg = d3.select('#viz').select('svg').attr("viewBox", `0 0 1200 1000`)
 
     clean('isHist')
 
@@ -640,7 +642,7 @@ function drawHistogram(){
 // Compare Non-White Populations in City and County
 
 function drawNWPopulation(){
-    let svg = d3.select("#vis").select('svg')
+    let svg = d3.select("#viz").select('svg').attr("viewBox", `0 0 1200 1000`)
 
     clean('isMultiples')
 
@@ -686,7 +688,7 @@ function drawNWPopulation(){
 // Compare Black Populations in City and County
 
 function drawBlackPopulation(){
-    let svg = d3.select("#vis").select('svg')
+    let svg = d3.select("#viz").select('svg').attr("viewBox", `0 0 1200 1000`)
 
     clean('isMultiples')
     simulation.stop()
@@ -734,7 +736,7 @@ function drawBlackPopulation(){
 function drawScatter(){
     simulation.stop()
     
-    let svg = d3.select("#vis").select("svg")
+    let svg = d3.select("#viz").select("svg").attr("viewBox", `0 0 1200 1000`)
     clean('isScatter')
 
     svg.selectAll('.scatter-x')
@@ -769,7 +771,7 @@ function drawScatter(){
 
 function drawPoverty(){
 
-    let svg = d3.select('#vis').select('svg')
+    let svg = d3.select('#viz').select('svg').attr("viewBox", `0 0 1200 1000`)
 
     clean('isBubble')
 
@@ -795,7 +797,7 @@ function drawPoverty(){
 
 function drawPoverty2(){
 
-    let svg = d3.select('#vis').select('svg')
+    let svg = d3.select('#viz').select('svg').attr("viewBox", `0 0 1200 1000`)
 
     clean('isBubble')
 
@@ -815,7 +817,7 @@ function drawPoverty2(){
 // function drawConclusion(){
 //     clean('none')
 
-//     let svg = d3.select('#vis').select('svg')
+//     let svg = d3.select('#viz').select('svg')
 //     svg.selectAll('circle')
 //         .transition()
 //         .attr('r', d => popSizeScale(d.Population)*1.5)
