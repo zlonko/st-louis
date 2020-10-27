@@ -10,7 +10,7 @@ Python was used to collect ("census") and manipulate ("stl_metro") data from the
 All visualizations were written in D3.js v5. 
 
 ## Product
-Read the full article at <a href="tims.page/stl.html">tims.page/stl.html</a>.
+Read the full article at <a href="https://tims.page/stl.html">tims.page/stl.html</a>.
 
 
 ![preview](./preview.png "Preview image" )
