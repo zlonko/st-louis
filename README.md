@@ -1,4 +1,4 @@
-# The St. Louis Divide
+# St. Louis, Divided
 Comparing disparities in the St. Louis metropolitan region using data visualizations.
 
 ## Data Collection
