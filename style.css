@@ -2,13 +2,13 @@
 
 
 body {
-    background-color: #eae7dc;
+    background-color: #f6f8ff;
     overflow-x: hidden;
 }
 
 #parent {
     margin: auto;
-    width:100%;
+    width: 100%;
     flex-direction: row;
     align-items: top;
     justify-content: space-around;
@@ -17,8 +17,7 @@ body {
 #sections {
     position: relative;
     display: inline-block;
-    width:34%;
-    /* max-width: 500px; */
+    width: 34%;
     height: 100%;
     left: 5%;
     margin-top: 4%;
@@ -63,14 +62,14 @@ body {
 h1 {
     font-size: 35px;
     font-size: 2.5vw;
-    color:#4f4e4c;
+    color:#4c4d4f;
 }
 
 h2 {
     font-weight: 700;
     text-align: left;
     line-height: 48px;
-    color:#4f4e4c;
+    color:#4c4d4f;
     font-size: 1.8vw;
 }
 
@@ -79,7 +78,8 @@ h3 {
     font-size: 16px;
     font-size: 1.2vw;
     font-weight: 500;
-    color:#807e7c;
+    color:#4c4d4f;
+    padding-bottom: 50px;
 }
 
 p {
@@ -87,8 +87,13 @@ p {
     line-height: 1.4vw;
 }
 
+li {
+    line-height: 1.4vw;
+    font-size: 1.2vw;
+}
+
 strong {
-    color: rgb(70, 159, 255);
+    font-weight: bold;
 }
 
 
@@ -106,8 +111,12 @@ svg circle:hover{
 }
 
 a {
-    color: #e98074;
-    text-decoration: none;
+    color: #52719e;
+    text-decoration: underline; 
+}
+
+a:hover {
+    color: #07254f;
 }
 
 img {
@@ -140,17 +149,17 @@ img {
 }
 
 .highlighter {
-    background-color: #FFFF00
+    background-color: #ffff91
 }
 
 .line1 {
     fill: none;
-    stroke-width: 2px;
+    stroke-width: 3px;
   }
 
 .line2 {
     fill: none;
-    stroke-width: 2px;
+    stroke-width: 3px;
   }
 
 .linelabel1 {
