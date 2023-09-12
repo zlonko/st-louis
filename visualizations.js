@@ -54,9 +54,9 @@ Promise.all([
 })
 
 
-const colors = ['#6d49d6', '#e85a4f']
-const colors2 = ['#d6d6d2', '#b06fa5', '#802d72']
-const colors3 = ['#d6d6d2', '#b06fa5', '#802d72']
+const colors = ['#7158b7', '#ba3f82']
+const colors2 = ['#b8c4d6', '#52719e', '#07254f']
+const colors3 = ['#b8c4d6', '#52719e', '#07254f']
 
 
 //Create all the scales and save to global variables
@@ -199,11 +199,11 @@ function createLegend5(x, y){
 
 function colorByPctNWFill(d, i){
     if (d.PctNotWhite > 0.50){
-        return '#802d72'
+        return '#07254f'
     } else if (d.PctNotWhite > 0.33) {
-        return '#b06fa5'
+        return '#52719e'
     } else {
-        return '#ccccc8'
+        return '#b8c4d6'
     }
 }
 
@@ -211,11 +211,11 @@ function colorByPctNWFill(d, i){
 
 function colorByPctBlackFill(d, i){
     if (d.PctBlack > 0.50){
-        return '#802d72'
+        return '#07254f'
     } else if (d.PctBlack > 0.13) {
-        return '#b06fa5'
+        return '#52719e'
     } else {
-        return '#ccccc8'
+        return '#b8c4d6'
     }
 }
 
@@ -224,9 +224,7 @@ function drawInitial(){
 
     let svg = d3.select("#viz")
                     .append('svg')
-                    .attr("viewBox", `0 0 1200 1000`)
-                    // .attr('width', 1000)
-                    // .attr('height', 950)
+                    .attr("viewBox", `-100 0 1350 1900`)
                     .attr('opacity', 1)
 
     simulation = d3.forceSimulation(dataset)
@@ -262,7 +260,6 @@ function drawInitial(){
 
     function mouseOver(d, i){
 
-        console.log('hi')
         d3.select(this)
             .transition('mouseover').duration(100)
             .attr('opacity', 1)
@@ -300,8 +297,8 @@ function drawInitial(){
             .attr('class', 'cat-rect')
             .attr('x', d => categoriesXY[d][0] + 1000)
             .attr('y', d => categoriesXY[d][1] + 0)
-            .attr('width', 220)
-            .attr('height', 30)
+            .attr('width', 310)
+            .attr('height', 50)
             .attr('opacity', 0)
             .attr('fill', '#a5a8c2')
 
@@ -317,7 +314,7 @@ function drawInitial(){
         .attr('x', d => categoriesXY[d][0] + 200 + 1000)
         .attr('y', d => categoriesXY[d][1] - 500)
         .attr('font-family', 'Noto Serif')
-        .attr('font-size', '18px')
+        .attr('font-size', '28px')
         .attr('font-weight', 700)
         .attr('fill', 'black')
         .attr('text-anchor', 'middle')       
@@ -347,8 +344,7 @@ function drawInitial(){
         .transition('best-fit-line').duration(430)
             .attr('class', 'best-fit')
             .attr('d', lineFunction(bestFitLine))
-            .attr('stroke', 'grey')
-            .attr('stroke-dasharray', 6.2)
+            .attr('stroke', 'blue')
             .attr('opacity', 0)
             .attr('stroke-width', 3)
 
@@ -360,6 +356,9 @@ function drawInitial(){
         .attr('class', 'scatter-x')
         .attr('opacity', 0)
         .attr('transform', `translate(0, ${height + margin.top})`)
+        .style("font-size", "18px")
+        .style("font-family", "Open Sans")
+        .style("color", "#333")
         .call(g => g.select('.domain')
             .remove())
         
@@ -368,18 +367,24 @@ function drawInitial(){
         .call(scatteryAxis)
         .attr('class', 'scatter-y')
         .attr('opacity', 0)
-        .attr('transform', `translate(${margin.left - 20 + width}, 0)`)
+        .attr('transform', `translate(${margin.left + width}, 0)`)
+        .style("font-size", "18px")
+        .style("font-family", "Open Sans")
+        .style("color", "#333")
         .call(g => g.select('.domain')
             .remove())
         .call(g => g.selectAll('.tick line'))
-            .attr('stroke-opacity', 0.2)
-            .attr('stroke-dasharray', 2.5)
+            .attr('stroke-opacity', 0.8)
+            .attr('stroke-dasharray', 4)
 
 
     let histXAxis = d3.axisBottom(histXScale).tickFormat(d3.format('$,'))
     svg.append('g')
         .attr('class', 'hist-axis')
         .attr('transform', `translate(0, ${height + margin.top + 10})`)
+        .style("font-size", "18px")
+        .style("font-family", "Open Sans")
+        .style("color", "#333")
         .attr('opacity', 0)
         .call(histXAxis)
 
@@ -400,11 +405,14 @@ function drawInitial(){
         .attr('class', 'poverty-y-axis')
         .attr('opacity', 0)
         .attr('transform', `translate(${margin.left - 20 + width}, -100)`)
+        .style("font-size", "18px")
+        .style("font-family", "Open Sans")
+        .style("color", "#333")
         .call(g => g.select('.domain')
             .remove())
         .call(g => g.selectAll('.tick line'))
-            .attr('stroke-opacity', 0.3)
-            .attr('stroke-dasharray', 2.5)
+            .attr('stroke-opacity', 1)
+            .attr('stroke-dasharray', 4)
 
 
     // Add line chart components
@@ -415,18 +423,24 @@ function drawInitial(){
         .call(populationXAxis)
         .attr('class', 'population-x')
         .attr('transform', `translate(0, ${height + margin.top})`)
+        .style("font-size", "18px")
+        .style("font-family", "Open Sans")
+        .style("color", "grey")
         .call(g => g.select('.domain')
             .remove())
     
     svg.append('g')
         .call(populationYAxis)
         .attr('class', 'population-y')
-        .attr('transform', `translate(${margin.left - 20 + width}, 0)`)
+        .attr('transform', `translate(${margin.left + width}, 0)`)
+        .style("font-size", "18px")
+        .style("font-family", "Open Sans")
+        .style("color", "grey")
         .call(g => g.select('.domain')
             .remove())
         .call(g => g.selectAll('.tick line'))
-            .attr('stroke-opacity', 0.2)
-            .attr('stroke-dasharray', 2.5)
+            .attr('stroke-opacity', 0.8)
+            .attr('stroke-dasharray', 4)
     
     var lineCity = d3.line()
         .x(function(d) { return lineXScale(d.Year); })
@@ -444,39 +458,38 @@ function drawInitial(){
         .call(lineCity)
         .data([populationchange])
         .attr('class', 'line1')
-        .attr('stroke', '#6d49d6')
+        .attr('stroke', '#7158b7')
+        .attr('opacity', 0.7)
         .attr('d', lineCity)
 
     svg.append('path')
         .call(lineCounty)
         .data([populationchange])
         .attr('class', 'line2')
-        .style('stroke', '#e85a4f')
+        .style('stroke', '#ba3f82')
+        .attr('opacity', 0.7)
         .attr('d', lineCounty)
-        .attr('stroke-opacity',1)
 
     svg.append('text')
-        .attr('font-family', 'Noto Serif')
-        .attr('font-size', '18px')
+        .attr('font-family', 'Open Sans')
+        .attr('font-size', '24px')
         .attr('font-weight', 700)
-        .attr('x',840)
-        .attr('y',530)
-        .style('fill', '#6d49d6')
+        .attr('x', 805)
+        .attr('y', 520)
+        .style('fill', '#7158b7')
         .text('St. Louis City')
         .attr('class','linelabel1')
   
     svg.append('text')
-        .attr('font-family', 'Noto Serif')
-        .attr('font-size', '18px')
+        .attr('font-family', 'Open Sans')
+        .attr('font-size', '24px')
         .attr('font-weight', 700)
-        .attr('x',740)
-        .attr('y',175)
-        .style('fill', '#e85a4f')
+        .attr('x', 770)
+        .attr('y', 155)
+        .style('fill', '#ba3f82')
         .text('St. Louis County')
         .attr('class','linelabel2')
-
 }
-
 
 // Set opacity to 0 for each section's elements when scrolling out
 // Later, when a new section is reached, opacity of that section's elements is set to 1
@@ -521,7 +534,7 @@ function drawPopulationTrend(){
     
     let svg = d3.select("#viz")
                     .select('svg')
-                    .attr("viewBox", `0 0 1200 1000`)
+                    .attr("viewBox", `-100 0 1350 1900`)
                     // .attr('width', 1000)
                     // .attr('height', 950)
     
@@ -565,21 +578,20 @@ function drawPopulationTrend(){
 
 function drawTotalPopulation(){
     
-    let svg = d3.select("#viz").select('svg').attr("viewBox", `0 0 1200 1000`)
+    let svg = d3.select("#viz").select('svg').attr("viewBox", `-100 0 1350 1900`)
     
     clean('isMultiples')
 
     svg.selectAll('.cat-rect').transition().duration(300).delay((d, i) => i * 30)
         .attr('opacity', 0.2)
-        .attr('x', d => categoriesXY[d][0] + 90)
+        .attr('x', d => categoriesXY[d][0] + 75)
         .attr('y', d => categoriesXY[d][1] + 230)
         
 
     svg.selectAll('.lab-text').transition().duration(300).delay((d, i) => i * 30)
-        // .text(d => `A: $${d3.format(",.2r")(categoriesXY[d][2])}`)
         .text(d => `Population: ${d3.format(",")(categoriesXY[d][3])}`)
-        .attr('x', d => categoriesXY[d][0] + 200)   
-        .attr('y', d => categoriesXY[d][1] + 250)
+        .attr('x', d => categoriesXY[d][0] + 230)   
+        .attr('y', d => categoriesXY[d][1] + 265)
         .attr('opacity', 1)
 
     svg.selectAll('.lab-text')
@@ -599,7 +611,7 @@ function drawTotalPopulation(){
 
     simulation  
         .force('charge', d3.forceManyBody().strength([3]))
-        .force('forceX', d3.forceX(d => categoriesXY[d.County][0] + 200))
+        .force('forceX', d3.forceX(d => categoriesXY[d.County][0] + 220))
         .force('forceY', d3.forceY(d => categoriesXY[d.County][1] - 50))
         .force('collide', d3.forceCollide(d => popSizeScale(d.Population) + 3))
         .alphaDecay([0.02])
@@ -613,7 +625,7 @@ function drawTotalPopulation(){
 // Income vs. County Histogram
 
 function drawHistogram(){
-    let svg = d3.select('#viz').select('svg').attr("viewBox", `0 0 1200 1000`)
+    let svg = d3.select('#viz').select('svg').attr("viewBox", `-100 0 1350 1900`)
 
     clean('isHist')
 
@@ -630,7 +642,6 @@ function drawHistogram(){
         .transition()
         .attr('opacity', 0.7)
         .selectAll('.domain')
-        .attr('opacity', 1)
 
     svg.selectAll('.lab-text')
         .on('mouseout', )
@@ -642,7 +653,7 @@ function drawHistogram(){
 // Compare Non-White Populations in City and County
 
 function drawNWPopulation(){
-    let svg = d3.select("#viz").select('svg').attr("viewBox", `0 0 1200 1000`)
+    let svg = d3.select("#viz").select('svg').attr("viewBox", `-100 0 1350 1900`)
 
     clean('isMultiples')
 
@@ -650,8 +661,8 @@ function drawNWPopulation(){
 
     svg.selectAll('.lab-text').transition().duration(300).delay((d, i) => i * 30)
         .text(d => `People of Color: ${d3.format(",.2r")(categoriesXY[d][4])}%`)
-        .attr('x', d => categoriesXY[d][0] + 200)   
-        .attr('y', d => categoriesXY[d][1] + 250)
+        .attr('x', d => categoriesXY[d][0] + 230)   
+        .attr('y', d => categoriesXY[d][1] + 265)
         .attr('opacity', 1)
 
     svg.selectAll('.lab-text')
@@ -666,12 +677,12 @@ function drawNWPopulation(){
 
     svg.selectAll('.cat-rect').transition().duration(300).delay((d, i) => i * 30)
     .attr('opacity', 0.2)
-    .attr('x', d => categoriesXY[d][0] + 90)
+    .attr('x', d => categoriesXY[d][0] + 75)
     .attr('y', d => categoriesXY[d][1] + 230)
 
     simulation  
         .force('charge', d3.forceManyBody().strength([3]))
-        .force('forceX', d3.forceX(d => categoriesXY[d.County][0] + 200))
+        .force('forceX', d3.forceX(d => categoriesXY[d.County][0] + 220))
         .force('forceY', d3.forceY(d => categoriesXY[d.County][1] - 50))
         .force('collide', d3.forceCollide(d => popSizeScale(d.Population) + 3))
         .alphaDecay([0.02])
@@ -688,7 +699,7 @@ function drawNWPopulation(){
 // Compare Black Populations in City and County
 
 function drawBlackPopulation(){
-    let svg = d3.select("#viz").select('svg').attr("viewBox", `0 0 1200 1000`)
+    let svg = d3.select("#viz").select('svg').attr("viewBox", `-100 0 1350 1900`)
 
     clean('isMultiples')
     simulation.stop()
@@ -696,8 +707,8 @@ function drawBlackPopulation(){
     
     svg.selectAll('.lab-text').transition().duration(300).delay((d, i) => i * 30)
         .text(d => `Black Residents: ${d3.format(",.2r")(categoriesXY[d][5])}%`)
-        .attr('x', d => categoriesXY[d][0] + 200)   
-        .attr('y', d => categoriesXY[d][1] + 250)
+        .attr('x', d => categoriesXY[d][0] + 230)   
+        .attr('y', d => categoriesXY[d][1] + 265)
         .attr('opacity', 1)
 
     svg.selectAll('.lab-text')
@@ -712,12 +723,12 @@ function drawBlackPopulation(){
 
     svg.selectAll('.cat-rect').transition().duration(300).delay((d, i) => i * 30)
         .attr('opacity', 0.2)
-        .attr('x', d => categoriesXY[d][0] + 90)
+        .attr('x', d => categoriesXY[d][0] + 75)
         .attr('y', d => categoriesXY[d][1] + 230)
 
     simulation  
         .force('charge', d3.forceManyBody().strength([3]))
-        .force('forceX', d3.forceX(d => categoriesXY[d.County][0] + 200))
+        .force('forceX', d3.forceX(d => categoriesXY[d.County][0] + 220))
         .force('forceY', d3.forceY(d => categoriesXY[d.County][1] - 50))
         .force('collide', d3.forceCollide(d => popSizeScale(d.Population) + 3))
         .alphaDecay([0.02])
@@ -736,7 +747,7 @@ function drawBlackPopulation(){
 function drawScatter(){
     simulation.stop()
     
-    let svg = d3.select("#viz").select("svg").attr("viewBox", `0 0 1200 1000`)
+    let svg = d3.select("#viz").select("svg").attr("viewBox", `-100 0 1350 1900`)
     clean('isScatter')
 
     svg.selectAll('.scatter-x')
@@ -771,7 +782,7 @@ function drawScatter(){
 
 function drawPoverty(){
 
-    let svg = d3.select('#viz').select('svg').attr("viewBox", `0 0 1200 1000`)
+    let svg = d3.select('#viz').select('svg').attr("viewBox", `-100 0 1350 1900`)
 
     clean('isBubble')
 
@@ -797,7 +808,7 @@ function drawPoverty(){
 
 function drawPoverty2(){
 
-    let svg = d3.select('#viz').select('svg').attr("viewBox", `0 0 1200 1000`)
+    let svg = d3.select('#viz').select('svg').attr("viewBox", `-100 0 1350 1900`)
 
     clean('isBubble')
 
