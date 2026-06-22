@@ -16,7 +16,7 @@ export const Hero = forwardRef<HTMLElement>(function Hero(_props, ref) {
         </p>
       </div>
       <figure className="hero-image">
-        <img src="/images/hero.jpg" alt="The St. Louis skyline along the Mississippi River" />
+        <img src="/images/hero.png" alt="The St. Louis skyline along the Mississippi River" />
         <figcaption className="hero-caption">
           The St. Louis skyline spans the Mississippi River, where the City and County have grown apart for more
           than a century.
