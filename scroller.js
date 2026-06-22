@@ -1,11 +1,11 @@
 function scroller(){
     let container = d3.select('body')
-    let dispatch = d3.dispatch('active', 'progress');
+    let dispatch = d3.dispatch('active', 'progress', 'inactive');
     let sections = d3.selectAll('.step')
     let sectionPositions
    
     let currentIndex = -1
-    let containerStart = 0;
+    let scrollOffset = 0;
 
     function scroll(){
         d3.select(window)
@@ -20,7 +20,13 @@ function scroller(){
         });
     }
 
+    function updateScrollOffset() {
+        const hero = document.querySelector('.hero');
+        scrollOffset = hero ? hero.offsetTop + hero.offsetHeight : 0;
+    }
+
     function resize(){
+        updateScrollOffset();
         sectionPositions = [];
         let startPos;
     
@@ -35,7 +41,20 @@ function scroller(){
     }
 
     function position() {
-        let pos = window.pageYOffset - 300 - containerStart;
+        updateScrollOffset();
+
+        const pastHero = window.pageYOffset >= scrollOffset - 50;
+        document.body.classList.toggle('scrollytelling-active', pastHero);
+
+        if (!pastHero) {
+            if (currentIndex !== -1) {
+                dispatch.call('inactive', this);
+                currentIndex = -1;
+            }
+            return;
+        }
+
+        let pos = window.pageYOffset - 300 - scrollOffset;
         let sectionIndex = d3.bisect(sectionPositions, pos);
         sectionIndex = Math.min(sections.size()-1, sectionIndex);
     
