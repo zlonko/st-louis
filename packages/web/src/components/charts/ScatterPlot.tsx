@@ -139,7 +139,7 @@ function drawChart(container: HTMLDivElement, tooltip: HTMLDivElement, data: Cen
     .attr('stroke', '#52719e')
     .attr('stroke-width', 3)
     .attr('opacity', 0.55)
-    .attr('d', lineGenerator(bestFitLine));
+    .attr('d', lineGenerator(bestFitLine) ?? '');
 
   const bubbles = chart
     .selectAll<SVGCircleElement, CensusTract>('circle')
