@@ -864,7 +864,12 @@ let scroll = scroller()
     .container(d3.select('#graphic'))
 scroll()
 
-let lastIndex, activeIndex = 0
+let lastIndex = -1, activeIndex = -1
+
+scroll.on('inactive', function() {
+    lastIndex = -1;
+    activeIndex = -1;
+});
 
 scroll.on('active', function(index){
     d3.selectAll('.step')
@@ -872,11 +877,15 @@ scroll.on('active', function(index){
         .style('opacity', function (d, i) {return i === index ? 1 : 0.1;});
     
     activeIndex = index
-    let sign = (activeIndex - lastIndex) < 0 ? -1 : 1; 
-    let scrolledSections = d3.range(lastIndex + sign, activeIndex + sign, sign);
-    scrolledSections.forEach(i => {
-        activationFunctions[i]();
-    })
+    if (lastIndex === -1) {
+        activationFunctions[index]();
+    } else {
+        let sign = (activeIndex - lastIndex) < 0 ? -1 : 1; 
+        let scrolledSections = d3.range(lastIndex + sign, activeIndex + sign, sign);
+        scrolledSections.forEach(i => {
+            activationFunctions[i]();
+        })
+    }
     lastIndex = activeIndex;
 
 })

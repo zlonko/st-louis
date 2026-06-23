@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Instrument Serif", serif;
+  --font-sans: "IBM Plex Sans", sans-serif;
+  --color-article-bg: #f6f8ff;
+  --color-accent-orange: #e85d04;
+  --color-accent-orange-hover: #c44d03;
+  --color-city: #c44d03;
+  --color-county: #7158b7;
+  --color-article-text: #6e6c68;
+  --color-heading: #4c4d4f;
+  --color-link: #52719e;
+  --color-link-hover: #07254f;
+}
+
+body {
+  @apply bg-article-bg overflow-x-hidden m-0 font-sans;
+}
+
+#root {
+  @apply w-full;
+}

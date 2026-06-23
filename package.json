@@ -1,0 +1,15 @@
+{
+  "name": "st-louis",
+  "private": true,
+  "engines": {
+    "node": "24.x"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @st-louis/web",
+    "build": "npm run build -w @st-louis/web",
+    "build:data": "cd packages/data/scripts && python stl_metro.py && cp ../input/populationchange.csv ../output/ 2>/dev/null; cp ../output/census_tracts_stl.csv ../web/public/data/ 2>/dev/null; cp ../output/dataset.csv ../web/public/data/ 2>/dev/null || cp ../output/*.csv ../web/public/data/; cp ../input/populationchange.csv ../web/public/data/"
+  }
+}
