@@ -6,6 +6,7 @@ import {
   type CensusTract,
   type PopulationChange,
 } from '../types/data';
+import { datasetUrl, populationChangeUrl } from '../constants/dataUrls';
 
 interface DataState {
   dataset: CensusTract[];
@@ -22,8 +23,8 @@ export function useData(): DataState {
 
   useEffect(() => {
     Promise.all([
-      d3.csv('/data/dataset.csv', parseCensusTractRow),
-      d3.csv('/data/populationchange.csv', parsePopulationChangeRow),
+      d3.csv(datasetUrl, parseCensusTractRow),
+      d3.csv(populationChangeUrl, parsePopulationChangeRow),
     ])
       .then(([tracts, pop]) => {
         setDataset(tracts);

@@ -7,8 +7,8 @@ export const Hero = forwardRef<HTMLElement>(function Hero(_props, ref) {
       className="flex flex-col lg:flex-row w-full mt-[60px] lg:min-h-[calc(100vh-60px)] bg-white"
     >
       <div className="lg:w-1/3 px-5 py-8 lg:px-10 lg:py-12 flex flex-col justify-center order-2 lg:order-1">
-        <p className="font-sans text-sm font-bold text-gray-900 underline decoration-2 underline-offset-4 mb-5">
-          St. Louis
+        <p className="font-sans text-sm font-bold text-gray-500 uppercase mb-2 tracking-wide">
+          Race in America
         </p>
         <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-gray-900 mb-5">
           St. Louis, Divided.
@@ -21,9 +21,9 @@ export const Hero = forwardRef<HTMLElement>(function Hero(_props, ref) {
         <p className="font-sans text-sm font-bold text-gray-900 mt-0 lg:mt-0">
           by{' '}
           <a href="https://www.tims.page" className="text-gray-900 underline">
-            Timothy Blaine Zielonko
+            T. Blaine Zielonko
           </a>{' '}
-          | October 24, 2020
+          | June 1, 2026
         </p>
       </div>
       <figure className="lg:w-2/3 m-0 flex flex-col order-1 lg:order-2 overflow-hidden">

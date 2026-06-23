@@ -1,39 +1,44 @@
 """
-Merge census tract attributes with GeoJSON coordinates to produce dataset.csv.
-Requires input/census_tracts_stl.csv and input/tracts.geojson.
+Export census tract attributes to dataset.csv with precomputed chart layouts.
+Requires input/census_tracts_stl.csv.
 """
 
+import subprocess
+import sys
+from pathlib import Path
+
 import pandas as pd
+
 from paths import INPUT, OUTPUT
 
-
-def load_geojson(filename_geojson):
-    df = pd.read_json(filename_geojson, orient="records")
-    df = pd.json_normalize(df["features"])
-    return df
+SCRIPT_DIR = Path(__file__).resolve().parent
+COMPUTE_LAYOUTS = SCRIPT_DIR / "compute_layouts.mjs"
 
 
 def main() -> None:
-    geojson_path = INPUT / "tracts.geojson"
     census_path = INPUT / "census_tracts_stl.csv"
     output_path = OUTPUT / "dataset.csv"
+    temp_path = OUTPUT / "dataset_pre_layout.csv"
 
-    if not geojson_path.exists():
-        raise FileNotFoundError(
-            f"Missing {geojson_path}. Place St. Louis tract GeoJSON at input/tracts.geojson "
-            "or copy a pre-built dataset.csv to output/."
-        )
-
-    df_tracts = load_geojson(geojson_path)
-    df_tracts["GEOID"] = "1400000US" + df_tracts["properties.GEOID"].astype(str)
-    df_tracts_coords = df_tracts[["GEOID", "geometry.coordinates"]].copy()
-    df_tracts_coords = df_tracts_coords.rename(columns={"geometry.coordinates": "coords"})
+    if not census_path.exists():
+        raise FileNotFoundError(f"Missing {census_path}.")
 
     df_census = pd.read_csv(census_path)
-    df = df_census.merge(df_tracts_coords, right_on="GEOID", left_on="ACS_GEO_ID", how="left")
 
     OUTPUT.mkdir(parents=True, exist_ok=True)
-    df.to_csv(output_path, index=False)
+    df_census.to_csv(temp_path, index=False)
+
+    result = subprocess.run(
+        ["node", str(COMPUTE_LAYOUTS), str(temp_path), str(output_path)],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        print(result.stderr, file=sys.stderr)
+        raise RuntimeError("compute_layouts.mjs failed")
+
+    temp_path.unlink(missing_ok=True)
+    print(result.stdout.strip())
     print(f"\nFinished export to {output_path}\n")
 
 

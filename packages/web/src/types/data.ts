@@ -3,6 +3,7 @@ export interface CensusTract {
   County: string;
   Population: number;
   Income: number;
+  IncomePast12Mo: number;
   Black: number;
   PctBlack: number;
   NotWhite: number;
@@ -11,13 +12,10 @@ export interface CensusTract {
   PctPoverty: number;
   HistCol: number;
   Midpoint: number;
-  MapCoordinates: string;
-  x?: number;
-  y?: number;
-  vx?: number;
-  vy?: number;
-  fx?: number | null;
-  fy?: number | null;
+  BubbleX?: number;
+  BubbleY?: number;
+  PovertyX?: number;
+  PovertyY?: number;
 }
 
 export interface PopulationChange {
@@ -32,6 +30,7 @@ export function parseCensusTractRow(d: Record<string, string>): CensusTract {
     County: d.COUNTY_NAME,
     Population: +d.ACS_N_TOTAL_POP,
     Income: +d.ACS_MED_INCOME,
+    IncomePast12Mo: +d.ACS_MED_INCOME_PAST_12MO,
     Black: +d.N_BLACK,
     PctBlack: +d.PCT_BLACK,
     NotWhite: +d.N_NOT_WHITE,
@@ -40,7 +39,10 @@ export function parseCensusTractRow(d: Record<string, string>): CensusTract {
     PctPoverty: +d.PCT_POVERTY_STAT,
     HistCol: +d.bucket_idx,
     Midpoint: +d.midpoint,
-    MapCoordinates: d.coords,
+    BubbleX: d.bubble_x !== '' && d.bubble_x != null ? +d.bubble_x : undefined,
+    BubbleY: d.bubble_y !== '' && d.bubble_y != null ? +d.bubble_y : undefined,
+    PovertyX: d.poverty_x !== '' && d.poverty_x != null ? +d.poverty_x : undefined,
+    PovertyY: d.poverty_y !== '' && d.poverty_y != null ? +d.poverty_y : undefined,
   };
 }
 

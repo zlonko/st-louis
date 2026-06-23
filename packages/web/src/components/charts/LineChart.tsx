@@ -8,7 +8,10 @@ interface LineChartProps {
   countyColor: string;
 }
 
-const margin = { top: 20, right: 20, bottom: 44, left: 64 };
+const margin = { top: 24, right: 24, bottom: 40, left: 72 };
+const yMax = 1_000_000;
+const axisColor = '#8e8d8a';
+const fontFamily = '"IBM Plex Sans", sans-serif';
 
 function drawChart(
   container: HTMLDivElement,
@@ -23,16 +26,13 @@ function drawChart(
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
-  const xScale = d3
-    .scaleLinear()
-    .domain(d3.extent(data, (d) => d.Year) as [number, number])
-    .range([0, innerWidth]);
+  const years = data.map((d) => d.Year);
+  const yearMin = Math.min(...years);
+  const yearMax = Math.max(...years);
 
-  const yScale = d3
-    .scaleLinear()
-    .domain([0, d3.max(data, (d) => Math.max(d.PopCity, d.PopCounty))!])
-    .nice()
-    .range([innerHeight, 0]);
+  const xScale = d3.scaleLinear().domain([yearMin, yearMax]).range([0, innerWidth]);
+
+  const yScale = d3.scaleLinear().domain([0, yMax]).range([innerHeight, 0]);
 
   const svg = d3
     .select(container)
@@ -43,25 +43,35 @@ function drawChart(
     .attr('role', 'img')
     .attr('aria-label', 'Population change in St. Louis City and St. Louis County from 1880 to 2010');
 
+  svg
+    .append('rect')
+    .attr('width', width)
+    .attr('height', height)
+    .attr('fill', '#f6f8ff');
+
   const chart = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const xTickValues = d3.range(yearMin, yearMax + 1, 10);
+  const yTickValues = d3.range(0, yMax + 1, 100_000);
 
   const xAxis = d3
     .axisBottom(xScale)
+    .tickValues(xTickValues)
     .tickFormat(d3.format('d') as (d: d3.NumberValue) => string)
-    .ticks(data.length > 10 ? 8 : data.length);
+    .tickSize(6);
 
   const yAxis = d3
     .axisLeft(yScale)
-    .ticks(5)
-    .tickFormat(d3.format('.2s') as (d: d3.NumberValue) => string);
+    .tickValues(yTickValues)
+    .tickFormat(d3.format(',') as (d: d3.NumberValue) => string)
+    .tickSize(-innerWidth);
 
   chart
     .append('g')
     .attr('transform', `translate(0,${innerHeight})`)
     .call(xAxis)
     .call((g) => g.select('.domain').remove())
-    .call((g) => g.selectAll('.tick line').remove())
-    .attr('class', 'font-sans text-xs text-gray-500');
+    .call((g) => g.selectAll('.tick text').attr('fill', axisColor).style('font-family', fontFamily).style('font-size', '14px'));
 
   chart
     .append('g')
@@ -70,28 +80,11 @@ function drawChart(
     .call((g) =>
       g
         .selectAll('.tick line')
-        .attr('x2', innerWidth)
-        .attr('stroke-opacity', 0.15)
+        .attr('stroke', axisColor)
+        .attr('stroke-opacity', 0.35)
         .attr('stroke-dasharray', '4'),
     )
-    .attr('class', 'font-sans text-xs text-gray-500');
-
-  chart
-    .append('text')
-    .attr('x', innerWidth / 2)
-    .attr('y', innerHeight + 36)
-    .attr('text-anchor', 'middle')
-    .attr('class', 'font-sans text-xs fill-gray-600')
-    .text('Year');
-
-  chart
-    .append('text')
-    .attr('transform', 'rotate(-90)')
-    .attr('x', -innerHeight / 2)
-    .attr('y', -48)
-    .attr('text-anchor', 'middle')
-    .attr('class', 'font-sans text-xs fill-gray-600')
-    .text('Population');
+    .call((g) => g.selectAll('.tick text').attr('fill', axisColor).style('font-family', fontFamily).style('font-size', '14px'));
 
   const lineCity = d3
     .line<PopulationChange>()
@@ -110,6 +103,7 @@ function drawChart(
     .attr('fill', 'none')
     .attr('stroke', cityColor)
     .attr('stroke-width', 3)
+    .attr('opacity', 0.85)
     .attr('d', lineCity);
 
   chart
@@ -119,36 +113,35 @@ function drawChart(
     .attr('fill', 'none')
     .attr('stroke', countyColor)
     .attr('stroke-width', 3)
+    .attr('opacity', 0.85)
     .attr('d', lineCounty);
 
-  const legend = chart
-    .append('g')
-    .attr('transform', `translate(${innerWidth - 160}, 0)`);
+  const countyLabelYear = 1980;
+  const cityLabelYear = 1990;
+  const countyPoint = data.find((d) => d.Year === countyLabelYear) ?? data[data.length - 1];
+  const cityPoint = data.find((d) => d.Year === cityLabelYear) ?? data[data.length - 2];
 
-  const legendItems = [
-    { label: 'St. Louis City', color: cityColor },
-    { label: 'St. Louis County', color: countyColor },
-  ];
+  chart
+    .append('text')
+    .attr('class', 'linelabel2')
+    .attr('x', (xScale(countyPoint.Year) ?? 0) + 8)
+    .attr('y', (yScale(countyPoint.PopCounty) ?? 0) - 10)
+    .attr('fill', countyColor)
+    .style('font-family', fontFamily)
+    .style('font-size', '20px')
+    .style('font-weight', '600')
+    .text('St. Louis County');
 
-  legendItems.forEach((item, i) => {
-    const row = legend.append('g').attr('transform', `translate(0, ${i * 22})`);
-
-    row
-      .append('line')
-      .attr('x1', 0)
-      .attr('x2', 20)
-      .attr('y1', 8)
-      .attr('y2', 8)
-      .attr('stroke', item.color)
-      .attr('stroke-width', 3);
-
-    row
-      .append('text')
-      .attr('x', 28)
-      .attr('y', 12)
-      .attr('class', 'font-sans text-xs fill-gray-700')
-      .text(item.label);
-  });
+  chart
+    .append('text')
+    .attr('class', 'linelabel1')
+    .attr('x', (xScale(cityPoint.Year) ?? 0) + 8)
+    .attr('y', (yScale(cityPoint.PopCity) ?? 0) - 10)
+    .attr('fill', cityColor)
+    .style('font-family', fontFamily)
+    .style('font-size', '20px')
+    .style('font-weight', '600')
+    .text('St. Louis City');
 }
 
 export function LineChart({ data, cityColor, countyColor }: LineChartProps) {
@@ -171,7 +164,7 @@ export function LineChart({ data, cityColor, countyColor }: LineChartProps) {
   return (
     <div
       ref={containerRef}
-      className="aspect-[4/3] w-full rounded bg-white"
+      className="h-full w-full bg-article-bg"
       aria-hidden={data.length === 0}
     />
   );
