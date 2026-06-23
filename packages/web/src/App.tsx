@@ -148,6 +148,9 @@ export default function App() {
               <p className={stepParagraph}>
                 The County grew. The City shrank. And the people left behind were not by chance.
               </p>
+              <p className="pt-5 italic">
+                Hover over the chart to compare population by year.
+              </p>
             </TwoSection>
 
             <TwoSection
@@ -162,6 +165,9 @@ export default function App() {
               <p className={stepParagraph}>
                 But raw population doesn't tell you who stayed, who left, or who was pushed out. That requires a closer look.
               </p>
+              <p className="pt-5 italic">
+                Hover over a census tract to view its population.
+              </p>
             </TwoSection>
 
             <TwoSection
@@ -175,6 +181,9 @@ export default function App() {
               </p>
               <p className={stepParagraph}>
                 This is the economic geography of a region that spent decades building highways outward, subsidizng suburban development, amd leaving the City to manage its own decline with a shrinking tax base. The wealth didn't just move. It <em>was</em> moved.
+              </p>
+              <p className="pt-5 italic">
+                Hover over a census tract to view its median income.
               </p>
             </TwoSection>
 

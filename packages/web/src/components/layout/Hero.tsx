@@ -18,9 +18,8 @@ export const Hero = forwardRef<HTMLElement>(function Hero(_props, ref) {
           In the time since, the County exploded in size, while the City shrank to nearly a third of its peak
           population.
         </p>
-        <p className="font-sans text-sm font-bold text-gray-900 mt-0 lg:mt-0">
-          by{' '}
-          <a href="https://www.tims.page" className="text-gray-900 underline">
+        <p className="font-sans text-sm text-gray-900 mt-0 lg:mt-0">
+          <a href="https://www.tims.page" className="font-bold text-gray-900 underline">
             T. Blaine Zielonko
           </a>{' '}
           | June 1, 2026
@@ -37,7 +36,7 @@ export const Hero = forwardRef<HTMLElement>(function Hero(_props, ref) {
           than a century.
         </figcaption>
         <p className="block lg:hidden font-sans text-[0.6875rem] font-semibold tracking-wide text-gray-500 px-5 pb-5 bg-white m-0">
-          TIMOTHY BLAINE ZIELONKO
+          T. Blaine Zielonko
         </p>
       </figure>
     </header>
