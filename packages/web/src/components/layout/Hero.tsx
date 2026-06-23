@@ -14,9 +14,9 @@ export const Hero = forwardRef<HTMLElement>(function Hero(_props, ref) {
           St. Louis, Divided.
         </h1>
         <p className="font-sans text-[1.0625rem] leading-relaxed text-gray-600 mb-6">
-          In 1877, St. Louis, Missouri separated into two distinct governments: the City and the County.
+          Over a century ago, St. Louis, Missouri separated into two distinct governments: the City and the County.
           In the time since, the County exploded in size, while the City shrank to nearly a third of its peak
-          population.
+          population. This is the story of what happened a result.
         </p>
         <p className="font-sans text-sm text-gray-900 mt-0 lg:mt-0">
           <a href="https://www.tims.page" className="font-bold text-gray-900 underline">
@@ -27,12 +27,12 @@ export const Hero = forwardRef<HTMLElement>(function Hero(_props, ref) {
       </div>
       <figure className="lg:w-2/3 m-0 flex flex-col order-1 lg:order-2 overflow-hidden">
         <img
-          src="/images/hero.png"
+          src="/images/hero.webp"
           alt="The St. Louis skyline along the Mississippi River"
           className="block w-full h-auto max-h-[60vw] min-h-[240px] lg:min-h-0 lg:h-full object-cover flex-1"
         />
         <figcaption className="block lg:hidden font-sans text-sm leading-normal text-gray-600 px-5 pt-4 pb-2 bg-white">
-          The St. Louis skyline spans the Mississippi River, where the City and County have grown apart for more
+          The St. Louis skyline, dotted with half-occupied buildings, evidence of region growing apart for more
           than a century.
         </figcaption>
         <p className="block lg:hidden font-sans text-[0.6875rem] font-semibold tracking-wide text-gray-500 px-5 pb-5 bg-white m-0">
