@@ -27,7 +27,7 @@ export const Hero = forwardRef<HTMLElement>(function Hero(_props, ref) {
       </div>
       <figure className="lg:w-2/3 m-0 flex flex-col order-1 lg:order-2 overflow-hidden">
         <img
-          src="/images/hero.png"
+          src="/images/hero.webp"
           alt="The St. Louis skyline along the Mississippi River"
           className="block w-full h-auto max-h-[60vw] min-h-[240px] lg:min-h-0 lg:h-full object-cover flex-1"
         />
