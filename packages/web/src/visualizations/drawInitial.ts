@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import type { CensusTract, PopulationChange } from '../types/data';
-import { categories, categoriesXY, height, margin, width } from './constants';
+import { categories, categoriesXY, height, margin, VIEWBOX, width } from './constants';
 import type { ScaleSet } from './scales';
 import type { VizState } from './types';
 
@@ -24,8 +24,54 @@ export function drawInitial(
   const svg = d3
     .select(container)
     .append('svg')
-    .attr('viewBox', '-100 0 1350 1900')
+    .attr('viewBox', VIEWBOX)
+    .attr('width', '100%')
+    .attr('height', '100%')
+    .attr('preserveAspectRatio', 'xMidYMid meet')
     .attr('opacity', 1);
+
+  function showTooltip(d: CensusTract, pageX: number, pageY: number) {
+    if (!tooltipEl) return;
+    const left = Math.min(pageX + 10, window.innerWidth - 220);
+    const top = Math.max(70, pageY - 25);
+    d3.select(tooltipEl)
+      .style('left', left + 'px')
+      .style('top', top + 'px')
+      .style('display', 'block')
+      .html(
+        `<strong>Tract:</strong> ${d.Tract} 
+                <br> <strong>Area:</strong> ${d.County}
+                <br> <strong>Population:</strong> ${d3.format(',.2r')(d.Population)}
+                <br> <strong>People of Color:</strong> ${Math.round(d.PctNotWhite * 100)}%
+                <br> <strong>Black:</strong> ${Math.round(d.PctBlack * 100)}%
+                <br> <strong>Median Income:</strong> $${d3.format(',.2r')(d.Income)}
+                <br> <strong>Poverty Rate:</strong> ${Math.round(d.PctPoverty * 100)}%`,
+      );
+  }
+
+  function hideTooltip() {
+    if (tooltipEl) {
+      d3.select(tooltipEl).style('display', 'none');
+    }
+  }
+
+  function pointerOver(d: CensusTract) {
+    d3.select(this)
+      .attr('opacity', 1)
+      .attr('stroke-width', 5)
+      .attr('stroke', 'black');
+
+    const event = d3.event as MouseEvent & { changedTouches?: TouchList };
+    const pageX = event.changedTouches?.[0]?.pageX ?? event.pageX;
+    const pageY = event.changedTouches?.[0]?.pageY ?? event.pageY;
+    showTooltip(d, pageX, pageY);
+  }
+
+  function pointerOut() {
+    hideTooltip();
+
+    d3.select(this).attr('opacity', 1).attr('stroke-width', 0);
+  }
 
   const simulation = d3.forceSimulation(dataset);
 
@@ -49,43 +95,28 @@ export function drawInitial(
     .attr('opacity', 1);
 
   function mouseOver(d: CensusTract) {
-    d3.select(this)
-      .transition('mouseover')
-      .duration(100)
-      .attr('opacity', 1)
-      .attr('stroke-width', 5)
-      .attr('stroke', 'black');
-
-    if (tooltipEl) {
-      d3.select(tooltipEl)
-        .style('left', d3.event.pageX + 10 + 'px')
-        .style('top', d3.event.pageY - 25 + 'px')
-        .style('display', 'inline-block')
-        .html(
-          `<strong>Tract:</strong> ${d.Tract} 
-                <br> <strong>Area:</strong> ${d.County}
-                <br> <strong>Population:</strong> ${d3.format(',.2r')(d.Population)}
-                <br> <strong>People of Color:</strong> ${Math.round(d.PctNotWhite * 100)}%
-                <br> <strong>Black:</strong> ${Math.round(d.PctBlack * 100)}%
-                <br> <strong>Median Income:</strong> $${d3.format(',.2r')(d.Income)}
-                <br> <strong>Poverty Rate:</strong> ${Math.round(d.PctPoverty * 100)}%`,
-        );
-    }
+    pointerOver.call(this, d);
   }
 
   function mouseOut() {
-    if (tooltipEl) {
-      d3.select(tooltipEl).style('display', 'none');
-    }
-
-    d3.select(this)
-      .transition('mouseout')
-      .duration(100)
-      .attr('opacity', 1)
-      .attr('stroke-width', 0);
+    pointerOut.call(this);
   }
 
-  svg.selectAll<SVGCircleElement, CensusTract>('circle').on('mouseover', mouseOver).on('mouseout', mouseOut);
+  function touchStart(d: CensusTract) {
+    d3.event.preventDefault();
+    pointerOver.call(this, d);
+  }
+
+  function touchEnd() {
+    pointerOut.call(this);
+  }
+
+  svg
+    .selectAll<SVGCircleElement, CensusTract>('circle')
+    .on('mouseover', mouseOver)
+    .on('mouseout', mouseOut)
+    .on('touchstart', touchStart)
+    .on('touchend', touchEnd);
 
   svg
     .selectAll('.cat-rect')
@@ -111,7 +142,7 @@ export function drawInitial(
     .text((d) => `Average: $${d3.format(',.2r')(categoriesXY[d][2])}`)
     .attr('x', (d) => categoriesXY[d][0] + 200 + 1000)
     .attr('y', (d) => categoriesXY[d][1] - 500)
-    .attr('font-family', 'Noto Serif')
+    .attr('font-family', 'Instrument Serif')
     .attr('font-size', '28px')
     .attr('font-weight', 700)
     .attr('fill', 'black')
@@ -134,8 +165,6 @@ export function drawInitial(
 
   svg
     .append('path')
-    .transition('best-fit-line')
-    .duration(430)
     .attr('class', 'best-fit')
     .attr('d', lineFunction(bestFitLine))
     .attr('stroke', 'blue')
@@ -152,7 +181,7 @@ export function drawInitial(
     .attr('opacity', 0)
     .attr('transform', `translate(0, ${height + margin.top})`)
     .style('font-size', '18px')
-    .style('font-family', 'Open Sans')
+    .style('font-family', 'IBM Plex Sans')
     .style('color', '#333')
     .call((g) => g.select('.domain').remove());
 
@@ -163,7 +192,7 @@ export function drawInitial(
     .attr('opacity', 0)
     .attr('transform', `translate(${margin.left + width}, 0)`)
     .style('font-size', '18px')
-    .style('font-family', 'Open Sans')
+    .style('font-family', 'IBM Plex Sans')
     .style('color', '#333')
     .call((g) => g.select('.domain').remove())
     .call((g) =>
@@ -179,7 +208,7 @@ export function drawInitial(
     .attr('class', 'hist-axis')
     .attr('transform', `translate(0, ${height + margin.top + 10})`)
     .style('font-size', '18px')
-    .style('font-family', 'Open Sans')
+    .style('font-family', 'IBM Plex Sans')
     .style('color', '#333')
     .attr('opacity', 0)
     .call(histXAxis);
@@ -200,7 +229,7 @@ export function drawInitial(
     .attr('opacity', 0)
     .attr('transform', `translate(${margin.left - 20 + width}, -100)`)
     .style('font-size', '18px')
-    .style('font-family', 'Open Sans')
+    .style('font-family', 'IBM Plex Sans')
     .style('color', '#333')
     .call((g) => g.select('.domain').remove())
     .call((g) =>
@@ -219,7 +248,7 @@ export function drawInitial(
     .attr('class', 'population-x')
     .attr('transform', `translate(0, ${height + margin.top})`)
     .style('font-size', '18px')
-    .style('font-family', 'Open Sans')
+    .style('font-family', 'IBM Plex Sans')
     .style('color', 'grey')
     .call((g) => g.select('.domain').remove());
 
@@ -229,7 +258,7 @@ export function drawInitial(
     .attr('class', 'population-y')
     .attr('transform', `translate(${margin.left + width}, 0)`)
     .style('font-size', '18px')
-    .style('font-family', 'Open Sans')
+    .style('font-family', 'IBM Plex Sans')
     .style('color', 'grey')
     .call((g) => g.select('.domain').remove())
     .call((g) =>
@@ -273,7 +302,7 @@ export function drawInitial(
 
   svg
     .append('text')
-    .attr('font-family', 'Open Sans')
+    .attr('font-family', 'IBM Plex Sans')
     .attr('font-size', '24px')
     .attr('font-weight', 700)
     .attr('x', 805)
@@ -284,7 +313,7 @@ export function drawInitial(
 
   svg
     .append('text')
-    .attr('font-family', 'Open Sans')
+    .attr('font-family', 'IBM Plex Sans')
     .attr('font-size', '24px')
     .attr('font-weight', 700)
     .attr('x', 770)

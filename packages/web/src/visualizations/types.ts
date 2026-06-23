@@ -13,6 +13,7 @@ export interface VizContext extends VizState {
   populationChange: PopulationChange[];
   scales: ScaleSet;
   tooltipEl: HTMLElement | null;
+  legendId?: string;
 }
 
 export type ActivationFn = (ctx: VizContext) => void;

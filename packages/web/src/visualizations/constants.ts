@@ -1,3 +1,5 @@
+export const VIEWBOX = '-100 0 1350 1900';
+
 export const categories = ['St. Louis City', 'St. Louis County'] as const;
 
 export const categories2 = [

@@ -1,51 +1,53 @@
-import { useRef, useState, type RefObject } from 'react';
+import { useState } from 'react';
 import type { CensusTract, PopulationChange } from '../../types/data';
-import { useScroller } from '../../hooks/useScroller';
 import { steps } from '../../content/steps';
-import { ScrollySection } from './ScrollySection';
-import { VizPanel } from './VizPanel';
+import { SectionChart } from './SectionChart';
 
 interface ScrollytellingProps {
-  heroRef: RefObject<HTMLElement | null>;
   dataset: CensusTract[];
   populationChange: PopulationChange[];
 }
 
-export function Scrollytelling({ heroRef, dataset, populationChange }: ScrollytellingProps) {
-  const stepRefs = useRef<(HTMLElement | null)[]>([]);
+export function Scrollytelling({ dataset, populationChange }: ScrollytellingProps) {
   const [tooltipEl, setTooltipEl] = useState<HTMLDivElement | null>(null);
 
-  const { activeIndex, isScrollytellingActive } = useScroller({
-    heroRef,
-    stepRefs,
-  });
-
   return (
-    <div id="parent" className={isScrollytellingActive ? 'scrollytelling-active' : ''}>
-      <div id="tooltip" ref={setTooltipEl} />
+    <div className="relative bg-article-bg">
+      <div
+        id="tooltip"
+        ref={setTooltipEl}
+        className="fixed z-[200] max-w-[min(400px,calc(100vw-2rem))] rounded bg-black/70 px-2 py-1.5 font-sans text-sm text-white shadow-md pointer-events-none"
+      />
 
-      <div id="sections">
+      <div className="mx-auto w-full max-w-7xl">
         {steps.map((step, index) => (
-          <ScrollySection
+          <section
             key={step.id}
-            ref={(el) => {
-              stepRefs.current[index] = el;
-            }}
-            isActive={activeIndex === index}
-            legendId={step.legendId}
+            className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start lg:items-center px-5 lg:px-10 py-12 lg:py-20 border-b border-gray-200/70 last:border-b-0"
           >
-            {step.content}
-          </ScrollySection>
+            <div className="w-full lg:w-1/2 font-sans text-base leading-relaxed text-article-text">
+              {step.content}
+              {step.legendId && (
+                <svg
+                  id={`${step.legendId}-${index}`}
+                  className="w-full max-w-xs h-auto mt-4"
+                  aria-hidden="true"
+                />
+              )}
+            </div>
+
+            <div className="w-full lg:w-1/2 shrink-0">
+              <SectionChart
+                stepIndex={index}
+                dataset={dataset}
+                populationChange={populationChange}
+                tooltipEl={tooltipEl}
+                legendId={step.legendId ? `${step.legendId}-${index}` : undefined}
+              />
+            </div>
+          </section>
         ))}
       </div>
-
-      <VizPanel
-        dataset={dataset}
-        populationChange={populationChange}
-        activeIndex={activeIndex}
-        isActive={isScrollytellingActive}
-        tooltipEl={tooltipEl}
-      />
     </div>
   );
 }

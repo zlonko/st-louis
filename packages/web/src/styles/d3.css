@@ -1,0 +1,28 @@
+svg circle:hover {
+  cursor: pointer;
+}
+
+.line1,
+.line2 {
+  fill: none;
+  stroke-width: 3px;
+}
+
+.linelabel1,
+.linelabel2 {
+  fill: none;
+}
+
+.swatch {
+  fill: #d8c3a5;
+}
+
+.categoryLegend,
+.categoryLegenda,
+.categoryLegend2,
+.categoryLegend3,
+.categoryLegend4,
+.categoryLegend5 {
+  font-family: "IBM Plex Sans", sans-serif;
+  color: #8e8d8a;
+}

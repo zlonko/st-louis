@@ -1,23 +1,20 @@
 import * as d3 from 'd3';
-import { categoriesXY } from './constants';
+import { categoriesXY, VIEWBOX } from './constants';
 import { colorByPctNWFill } from './colors';
 import type { VizContext } from './types';
 import { clean } from './utils/clean';
 import { renderCategoryLegend } from './utils/legends';
+import { settleSimulation } from './utils/simulation';
 
 export function activateNWPopulation(ctx: VizContext): void {
-  const { simulation, svg, scales } = ctx;
+  const { simulation, svg, scales, legendId } = ctx;
   const { popSizeScale, categoryColorScale2 } = scales;
 
-  svg.attr('viewBox', '-100 0 1350 1900');
+  svg.attr('viewBox', VIEWBOX);
   clean(svg, 'isMultiples');
-  simulation.alpha(0.9).restart();
 
   svg
     .selectAll('.lab-text')
-    .transition()
-    .duration(300)
-    .delay((_d, i) => i * 30)
     .text((d: string) => `People of Color: ${d3.format(',.2r')(categoriesXY[d][4])}%`)
     .attr('x', (d: string) => categoriesXY[d][0] + 230)
     .attr('y', (d: string) => categoriesXY[d][1] + 265)
@@ -34,9 +31,6 @@ export function activateNWPopulation(ctx: VizContext): void {
 
   svg
     .selectAll('.cat-rect')
-    .transition()
-    .duration(300)
-    .delay((_d, i) => i * 30)
     .attr('opacity', 0.2)
     .attr('x', (d: string) => categoriesXY[d][0] + 75)
     .attr('y', (d: string) => categoriesXY[d][1] + 230);
@@ -50,11 +44,12 @@ export function activateNWPopulation(ctx: VizContext): void {
 
   svg
     .selectAll('circle')
-    .transition()
-    .duration(400)
-    .delay((_d, i) => i * 4)
     .attr('r', (d) => popSizeScale(d.Population))
     .attr('fill', colorByPctNWFill);
 
-  renderCategoryLegend('categorylegend2', 'categoryLegend2', categoryColorScale2, 20, 50);
+  settleSimulation(simulation);
+
+  if (legendId) {
+    renderCategoryLegend(legendId, 'categoryLegend2', categoryColorScale2, 20, 50);
+  }
 }
