@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import type { CensusTract } from '../../types/data';
 import { colorByPctBlackFill, colorByPctNWFill } from '../../visualizations/colors';
+import { categories2, colors2, pocBelowAverageStroke } from '../../visualizations/constants';
 import {
   bindBubbleHover,
   getBubbleChartTooltipContent,
@@ -31,11 +32,10 @@ const CITY = 'St. Louis City';
 const COUNTY = 'St. Louis County';
 const fontFamily = '"IBM Plex Sans", sans-serif';
 
-const legendItems = [
-  { label: '< 30% People of Color', color: '#b8c4d6' },
-  { label: '> 30% People of Color', color: '#52719e' },
-  { label: '> 50% People of Color', color: '#07254f' },
-] as const;
+const legendItems = categories2.map((label, i) => ({
+  label,
+  color: colors2[i]!,
+}));
 
 function drawClusterLabel(chart: d3.Selection<SVGGElement, unknown, null, undefined>, x: number, y: number, text: string) {
   const group = chart.append('g').attr('transform', `translate(${x},${y})`);
@@ -66,7 +66,14 @@ function drawLegend(chart: d3.Selection<SVGGElement, unknown, null, undefined>, 
   legendItems.forEach((item, i) => {
     const row = legend.append('g').attr('transform', `translate(0,${i * 22})`);
 
-    row.append('circle').attr('cx', 6).attr('cy', 0).attr('r', 6).attr('fill', item.color);
+    row
+      .append('circle')
+      .attr('cx', 6)
+      .attr('cy', 0)
+      .attr('r', 6)
+      .attr('fill', item.color)
+      .attr('stroke', item.color === colors2[0] ? pocBelowAverageStroke : 'none')
+      .attr('stroke-width', item.color === colors2[0] ? 1 : 0);
 
     row
       .append('text')
@@ -167,6 +174,8 @@ function drawChart(
     .append('circle')
     .attr('r', (d) => popSizeScale(d.Population) ?? 2)
     .attr('fill', fill)
+    .attr('stroke', (d) => (fill(d) === colors2[0] ? pocBelowAverageStroke : 'none'))
+    .attr('stroke-width', (d) => (fill(d) === colors2[0] ? 1 : 0))
     .attr('cx', (d) => getBubblePosition(d, innerWidth, innerHeight, usePrecomputed, layout).x)
     .attr('cy', (d) => getBubblePosition(d, innerWidth, innerHeight, usePrecomputed, layout).y);
 
