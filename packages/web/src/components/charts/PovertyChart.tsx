@@ -3,6 +3,11 @@ import * as d3 from 'd3';
 import type { CensusTract } from '../../types/data';
 import { colorByPctBlackFill } from '../../visualizations/colors';
 import {
+  bindBubbleHover,
+  getPovertyChartTooltipContent,
+  hideBubbleTooltip,
+} from './bubbleTooltip';
+import {
   computePovertyLayout,
   hasPovertyLayout,
   scalePovertyPosition,
@@ -44,6 +49,7 @@ function getPovertyPosition(
 
 function drawChart(
   container: HTMLDivElement,
+  tooltip: HTMLDivElement,
   data: CensusTract[],
   colorMode: PovertyChartColorMode,
   cityColor: string,
@@ -120,7 +126,7 @@ function drawChart(
       g.selectAll('.tick text').attr('fill', axisColor).style('font-family', fontFamily).style('font-size', '13px'),
     );
 
-  chart
+  const bubbles = chart
     .selectAll<SVGCircleElement, CensusTract>('circle')
     .data(data)
     .enter()
@@ -129,6 +135,8 @@ function drawChart(
     .attr('fill', fill)
     .attr('cx', (d) => getPovertyPosition(d, innerWidth, innerHeight, usePrecomputed, layout).x)
     .attr('cy', (d) => getPovertyPosition(d, innerWidth, innerHeight, usePrecomputed, layout).y);
+
+  bindBubbleHover(bubbles, tooltip, { left: margin.left, top: margin.top }, width, getPovertyChartTooltipContent);
 }
 
 export function PovertyChart({
@@ -139,26 +147,49 @@ export function PovertyChart({
   sharedLayout,
 }: PovertyChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container || data.length === 0) return;
+    const tooltip = tooltipRef.current;
+    if (!container || !tooltip || data.length === 0) return;
 
-    const render = () => drawChart(container, data, colorMode, cityColor, countyColor, sharedLayout);
+    const render = () => {
+      hideBubbleTooltip(tooltip);
+      drawChart(container, tooltip, data, colorMode, cityColor, countyColor, sharedLayout);
+    };
 
     render();
 
     const resizeObserver = new ResizeObserver(render);
     resizeObserver.observe(container);
 
-    return () => resizeObserver.disconnect();
+    return () => {
+      resizeObserver.disconnect();
+      hideBubbleTooltip(tooltip);
+    };
   }, [data, colorMode, cityColor, countyColor, sharedLayout]);
 
   return (
-    <div
-      ref={containerRef}
-      className="h-full w-full bg-article-bg"
-      aria-hidden={data.length === 0}
-    />
+    <div className="relative h-full w-full">
+      <div
+        ref={containerRef}
+        className="h-full w-full bg-article-bg"
+        aria-hidden={data.length === 0}
+      />
+      <div
+        ref={tooltipRef}
+        className="pointer-events-none absolute z-10 hidden min-w-[7rem] rounded bg-white px-3 py-2 shadow-md"
+        role="tooltip"
+      >
+        <p
+          data-bubble="region"
+          className="m-0 font-sans text-[10px] font-semibold uppercase tracking-wide text-article-text"
+        />
+        <p data-bubble="tract" className="m-0 mt-0.5 font-sans text-[10px] text-article-text" />
+        <p data-bubble="value" className="m-0 mt-1 font-sans text-base font-semibold text-heading" />
+        <p data-bubble="label" className="m-0 font-sans text-base text-heading" />
+      </div>
+    </div>
   );
 }

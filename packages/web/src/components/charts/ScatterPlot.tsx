@@ -2,6 +2,11 @@ import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import type { CensusTract } from '../../types/data';
 import { colorByPctBlackFill } from '../../visualizations/colors';
+import {
+  bindBubbleHover,
+  getScatterPlotTooltipContent,
+  hideBubbleTooltip,
+} from './bubbleTooltip';
 
 interface ScatterPlotProps {
   data: CensusTract[];
@@ -10,6 +15,7 @@ interface ScatterPlotProps {
 const fontFamily = '"IBM Plex Sans", sans-serif';
 const axisColor = '#8e8d8a';
 const yMax = 85_000;
+const xTickValues = [0, 0.13, 0.5, 1];
 
 function linearRegression(data: CensusTract[]) {
   const n = data.length;
@@ -31,7 +37,7 @@ function linearRegression(data: CensusTract[]) {
   return { slope, intercept };
 }
 
-function drawChart(container: HTMLDivElement, data: CensusTract[]) {
+function drawChart(container: HTMLDivElement, tooltip: HTMLDivElement, data: CensusTract[]) {
   const width = container.clientWidth;
   const height = container.clientHeight;
   if (width < 80 || height < 80) return;
@@ -70,7 +76,22 @@ function drawChart(container: HTMLDivElement, data: CensusTract[]) {
   const chart = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
   const yTickValues = d3.range(0, yMax + 1, 10_000);
-  const xTickValues = d3.range(0, 1.01, 0.1);
+
+  chart
+    .append('g')
+    .attr('class', 'x-thresholds')
+    .selectAll('line')
+    .data(xTickValues)
+    .enter()
+    .append('line')
+    .attr('x1', (d) => xScale(d) ?? 0)
+    .attr('x2', (d) => xScale(d) ?? 0)
+    .attr('y1', 0)
+    .attr('y2', innerHeight)
+    .attr('stroke', axisColor)
+    .attr('stroke-opacity', 0.35)
+    .attr('stroke-dasharray', '4')
+    .attr('pointer-events', 'none');
 
   const yAxis = d3
     .axisLeft(yScale)
@@ -81,7 +102,8 @@ function drawChart(container: HTMLDivElement, data: CensusTract[]) {
   const xAxis = d3
     .axisBottom(xScale)
     .tickValues(xTickValues)
-    .tickFormat(d3.format('.0%') as (d: d3.NumberValue) => string);
+    .tickFormat((d) => `${Math.round(Number(d) * 100)}%`)
+    .tickSize(6);
 
   chart
     .append('g')
@@ -103,7 +125,9 @@ function drawChart(container: HTMLDivElement, data: CensusTract[]) {
     .attr('transform', `translate(0,${innerHeight})`)
     .call(xAxis)
     .call((g) => g.select('.domain').attr('stroke', axisColor))
-    .call((g) => g.selectAll('.tick line').remove())
+    .call((g) =>
+      g.selectAll('.tick line').attr('stroke', axisColor),
+    )
     .call((g) =>
       g.selectAll('.tick text').attr('fill', axisColor).style('font-family', fontFamily).style('font-size', '13px'),
     );
@@ -117,7 +141,7 @@ function drawChart(container: HTMLDivElement, data: CensusTract[]) {
     .attr('opacity', 0.55)
     .attr('d', lineGenerator(bestFitLine));
 
-  chart
+  const bubbles = chart
     .selectAll<SVGCircleElement, CensusTract>('circle')
     .data(data)
     .enter()
@@ -126,30 +150,55 @@ function drawChart(container: HTMLDivElement, data: CensusTract[]) {
     .attr('cx', (d) => xScale(d.PctBlack) ?? 0)
     .attr('cy', (d) => yScale(d.Income) ?? 0)
     .attr('fill', colorByPctBlackFill);
+
+  bindBubbleHover(bubbles, tooltip, { left: margin.left, top: margin.top }, width, getScatterPlotTooltipContent);
 }
 
 export function ScatterPlot({ data }: ScatterPlotProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container || data.length === 0) return;
+    const tooltip = tooltipRef.current;
+    if (!container || !tooltip || data.length === 0) return;
 
-    const render = () => drawChart(container, data);
+    const render = () => {
+      hideBubbleTooltip(tooltip);
+      drawChart(container, tooltip, data);
+    };
 
     render();
 
     const resizeObserver = new ResizeObserver(render);
     resizeObserver.observe(container);
 
-    return () => resizeObserver.disconnect();
+    return () => {
+      resizeObserver.disconnect();
+      hideBubbleTooltip(tooltip);
+    };
   }, [data]);
 
   return (
-    <div
-      ref={containerRef}
-      className="h-full w-full bg-article-bg"
-      aria-hidden={data.length === 0}
-    />
+    <div className="relative h-full w-full">
+      <div
+        ref={containerRef}
+        className="h-full w-full bg-article-bg"
+        aria-hidden={data.length === 0}
+      />
+      <div
+        ref={tooltipRef}
+        className="pointer-events-none absolute z-10 hidden min-w-[7rem] rounded bg-white px-3 py-2 shadow-md"
+        role="tooltip"
+      >
+        <p
+          data-bubble="region"
+          className="m-0 font-sans text-[10px] font-semibold uppercase tracking-wide text-article-text"
+        />
+        <p data-bubble="tract" className="m-0 mt-0.5 font-sans text-[10px] text-article-text" />
+        <p data-bubble="value" className="m-0 mt-1 font-sans text-base font-semibold text-heading" />
+        <p data-bubble="label" className="m-0 font-sans text-base text-heading" />
+      </div>
+    </div>
   );
 }

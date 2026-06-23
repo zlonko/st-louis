@@ -5,6 +5,7 @@ import { Hero } from './components/layout/Hero';
 import { TwoSection } from './components/layout/TwoSection';
 import { StickyChartStage } from './components/layout/StickyChartStage';
 import { LinkCards } from './components/layout/LinkCards';
+import { Footer } from './components/layout/Footer';
 import { LineChart } from './components/charts/LineChart';
 import { BubbleChart } from './components/charts/BubbleChart';
 import { IncomeHistogram } from './components/charts/IncomeHistogram';
@@ -59,8 +60,7 @@ function useSharedPovertyLayout(data: CensusTract[]) {
 
 function renderMobileChart(chart: ReactNode | null, eager = false) {
   if (!chart) return undefined;
-  if (eager) return chart;
-  return <LazyChart>{chart}</LazyChart>;
+  return <LazyChart eager={eager}>{chart}</LazyChart>;
 }
 
 export default function App() {
@@ -73,13 +73,8 @@ export default function App() {
   const { activeStep, setSectionRef } = useActiveSection(SECTION_COUNT, { enabled: isDesktopScrolly });
 
   useEffect(() => {
-    Promise.all([
-      d3.csv(populationChangeUrl, parsePopulationChangeRow),
-      d3.csv(datasetUrl, parseCensusTractRow),
-    ]).then(([pop, tracts]) => {
-      setPopulationChange(pop);
-      setDataset(tracts);
-    });
+    d3.csv(populationChangeUrl, parsePopulationChangeRow).then(setPopulationChange);
+    d3.csv(datasetUrl, parseCensusTractRow).then(setDataset);
   }, []);
 
   const desktopCharts = useMemo(
@@ -332,6 +327,7 @@ export default function App() {
           <LinkCards />
         </div>
       </main>
+      <Footer />
     </>
   );
 }
