@@ -37,6 +37,62 @@ function linearRegression(data: CensusTract[]) {
   return { slope, intercept };
 }
 
+function drawHighBlackAnnotation(
+  chart: d3.Selection<SVGGElement, unknown, null, undefined>,
+  data: CensusTract[],
+  xScale: d3.ScaleLinear<number, number>,
+  yScale: d3.ScaleLinear<number, number>,
+  innerWidth: number,
+) {
+  const highBlackData = data.filter((d) => d.PctBlack >= 0.5);
+  if (highBlackData.length === 0) return;
+
+  const xLeft = xScale(0.5) ?? 0;
+  const xRight = innerWidth;
+  const centerX = (xLeft + xRight) / 2;
+  const regionMaxIncome = d3.max(highBlackData, (d) => d.Income) ?? 40_000;
+  const bracketIncome = Math.min(regionMaxIncome + 18_000, 70_000);
+  const bracketY = yScale(bracketIncome) ?? 0;
+  const stemLength = 10;
+
+  const annotation = chart.append('g').attr('class', 'high-black-annotation').attr('pointer-events', 'none');
+
+  annotation
+    .append('path')
+    .attr(
+      'd',
+      `M ${xLeft} ${bracketY + stemLength} L ${xLeft} ${bracketY} L ${xRight} ${bracketY} L ${xRight} ${bracketY + stemLength}`,
+    )
+    .attr('fill', 'none')
+    .attr('stroke', '#52719e')
+    .attr('stroke-width', 1.5);
+
+  const labelGroup = annotation.append('g').attr('transform', `translate(${centerX},${bracketY - stemLength - 10})`);
+
+  const text = labelGroup
+    .append('text')
+    .attr('text-anchor', 'middle')
+    .attr('y', 0)
+    .style('font-family', fontFamily)
+    .style('font-size', '11px')
+    .style('fill', '#4c4d4f');
+
+  text.append('tspan').attr('x', 0).attr('dy', '-1.25em').text('The highest proportion of Black residents,');
+  text.append('tspan').attr('x', 0).attr('dy', '1.25em').text('the lowest median income.');
+
+  const bbox = text.node()!.getBBox();
+  const padding = { x: 10, y: 6 };
+
+  labelGroup
+    .insert('rect', 'text')
+    .attr('x', bbox.x - padding.x)
+    .attr('y', bbox.y - padding.y)
+    .attr('width', bbox.width + padding.x * 2)
+    .attr('height', bbox.height + padding.y * 2)
+    .attr('fill', '#e4e7f0')
+    .attr('rx', 2);
+}
+
 function drawChart(container: HTMLDivElement, tooltip: HTMLDivElement, data: CensusTract[]) {
   const width = container.clientWidth;
   const height = container.clientHeight;
@@ -152,6 +208,8 @@ function drawChart(container: HTMLDivElement, tooltip: HTMLDivElement, data: Cen
     .attr('fill', colorByPctBlackFill);
 
   bindBubbleHover(bubbles, tooltip, { left: margin.left, top: margin.top }, width, getScatterPlotTooltipContent);
+
+  drawHighBlackAnnotation(chart, data, xScale, yScale, innerWidth);
 }
 
 export function ScatterPlot({ data }: ScatterPlotProps) {

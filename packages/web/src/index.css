@@ -2,6 +2,7 @@
 
 @theme {
   --font-serif: "Instrument Serif", serif;
+  --font-header: "Instrument Serif", serif;
   --font-sans: "IBM Plex Sans", sans-serif;
   --color-article-bg: #f6f8ff;
   --color-accent-orange: #e85d04;

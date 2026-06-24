@@ -36,16 +36,6 @@ export function LinkCards() {
           </a>
         ))}
       </div>
-      <figure className="mx-auto mt-12 max-w-[760px] text-center">
-        <img
-          src={archImage}
-          alt="The Gateway Arch on a sunny day in St. Louis"
-          className="w-full h-auto"
-        />
-        <figcaption className="mt-3 font-sans text-sm italic text-article-text">
-          The Gateway Arch stands on a sunny day.
-        </figcaption>
-      </figure>
     </section>
   );
 }

@@ -1,5 +1,5 @@
 import type { CensusTract } from '../types/data';
-import { colors2, NATIONAL_POC_THRESHOLD } from './constants';
+import { colors2, colors3, NATIONAL_BLACK_THRESHOLD, NATIONAL_POC_THRESHOLD } from './constants';
 
 export function colorByPctNWFill(d: CensusTract): string {
   if (d.PctNotWhite >= NATIONAL_POC_THRESHOLD) return colors2[1]!;
@@ -7,7 +7,6 @@ export function colorByPctNWFill(d: CensusTract): string {
 }
 
 export function colorByPctBlackFill(d: CensusTract): string {
-  if (d.PctBlack > 0.5) return '#07254f';
-  if (d.PctBlack > 0.13) return '#52719e';
-  return '#b8c4d6';
+  if (d.PctBlack >= NATIONAL_BLACK_THRESHOLD) return colors3[1]!;
+  return colors3[0]!;
 }

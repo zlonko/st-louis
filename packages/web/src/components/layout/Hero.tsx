@@ -14,9 +14,7 @@ export const Hero = forwardRef<HTMLElement>(function Hero(_props, ref) {
           St. Louis, Divided.
         </h1>
         <p className="font-sans text-[1.0625rem] leading-relaxed text-gray-600 mb-6">
-          Over a century ago, St. Louis, Missouri separated into two distinct governments: the City and the County.
-          In the time since, the County exploded in size, while the City shrank to nearly a third of its peak
-          population. This is the story of what happened a result.
+        Over a century ago, St. Louis, Missouri separated into two distinct governments: the City and the County. In the time since, the County exploded in size, while the City shrank to nearly a third of its peak population. This is the story of what happened a result.
         </p>
         <p className="font-sans text-sm text-gray-900 mt-0 lg:mt-0">
           <a href="https://www.tims.page" className="font-bold text-gray-900 underline">

@@ -17,6 +17,10 @@ const xTickValues = [1880, 1900, 1950, 2000];
 const yTickValues = [200_000, 400_000, 600_000, 800_000, 1_000_000];
 const markerRadius = 4;
 const seriesLabelFontSize = 12;
+const tooltipEstimatedHeight = 72;
+const tooltipOffset = 12;
+const tooltipStackGap = 10;
+const tooltipEdgePadding = 8;
 
 function formatYAxisTick(value: d3.NumberValue): string {
   const n = Number(value);
@@ -158,16 +162,14 @@ function placeStackedTooltips(
   topTooltip.classList.remove('hidden');
   bottomTooltip.classList.remove('hidden');
 
-  const topHeight = topTooltip.offsetHeight || 72;
-  const bottomHeight = bottomTooltip.offsetHeight || 72;
+  const topHeight = topTooltip.offsetHeight || tooltipEstimatedHeight;
+  const bottomHeight = bottomTooltip.offsetHeight || tooltipEstimatedHeight;
   const topWidth = topTooltip.offsetWidth || 120;
   const bottomWidth = bottomTooltip.offsetWidth || 120;
-  const gap = 10;
-  const offset = 12;
-  const edgePadding = 8;
+  const gap = tooltipStackGap;
+  const offset = tooltipOffset;
+  const edgePadding = tooltipEdgePadding;
   const blockWidth = Math.max(topWidth, bottomWidth);
-  const blockHeight = topHeight + bottomHeight + gap;
-  const midY = (topPointerY + bottomPointerY) / 2;
 
   let left =
     pointerX + offset + blockWidth <= containerWidth - edgePadding
@@ -175,18 +177,26 @@ function placeStackedTooltips(
       : pointerX - blockWidth - offset;
   left = Math.max(edgePadding, Math.min(left, containerWidth - blockWidth - edgePadding));
 
-  let topTop = midY - blockHeight / 2;
-  if (topTop < edgePadding) {
-    topTop = edgePadding;
+  let topTop = Math.max(edgePadding, topPointerY);
+  let bottomTop = Math.max(edgePadding, bottomPointerY);
+
+  if (topTop + topHeight + gap > bottomTop) {
+    bottomTop = topTop + topHeight + gap;
   }
-  if (topTop + blockHeight > containerHeight - edgePadding) {
-    topTop = containerHeight - edgePadding - blockHeight;
+
+  if (bottomTop + bottomHeight > containerHeight - edgePadding) {
+    bottomTop = containerHeight - edgePadding - bottomHeight;
+    topTop = Math.min(topTop, bottomTop - topHeight - gap);
+    topTop = Math.max(edgePadding, topTop);
+    if (topTop + topHeight + gap > bottomTop) {
+      bottomTop = topTop + topHeight + gap;
+    }
   }
 
   topTooltip.style.left = `${left}px`;
   topTooltip.style.top = `${topTop}px`;
   bottomTooltip.style.left = `${left}px`;
-  bottomTooltip.style.top = `${topTop + topHeight + gap}px`;
+  bottomTooltip.style.top = `${bottomTop}px`;
 }
 
 function hideTooltip(tooltip: HTMLDivElement) {
@@ -341,14 +351,14 @@ function drawChart(
 
   const getYearMarkers = (year: number) => markers.filter((m) => m.year === year);
 
+  const uniqueYears = [...new Set(data.map((d) => d.Year))].sort((a, b) => a - b);
+
   const showYearTooltips = (year: number) => {
     const yearMarkers = getYearMarkers(year);
     const cityMarker = yearMarkers.find((m) => m.label === 'City');
     const countyMarker = yearMarkers.find((m) => m.label === 'County');
     const containerWidth = chartContainer.clientWidth;
     const containerHeight = chartContainer.clientHeight;
-    const closeMarkers =
-      cityMarker && countyMarker && Math.abs(cityMarker.cy - countyMarker.cy) < 100;
 
     if (!cityMarker) {
       hideTooltip(cityTooltip);
@@ -358,7 +368,7 @@ function drawChart(
     }
     if (!cityMarker && !countyMarker) return;
 
-    if (closeMarkers && cityMarker && countyMarker) {
+    if (cityMarker && countyMarker) {
       const topMarker = cityMarker.cy < countyMarker.cy ? cityMarker : countyMarker;
       const bottomMarker = topMarker === cityMarker ? countyMarker : cityMarker;
       const topTooltip = topMarker === cityMarker ? cityTooltip : countyTooltip;
@@ -442,8 +452,6 @@ function drawChart(
         deactivateYear();
       });
   };
-
-  const uniqueYears = [...new Set(data.map((d) => d.Year))].sort((a, b) => a - b);
 
   const yearHitLayer = chart.append('g').attr('class', 'year-hit-areas');
 
